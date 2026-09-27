@@ -7,6 +7,21 @@ use eframe::egui::{Context, Stroke, Style, Theme};
 pub use palette::Palette;
 pub use ui_ext::{UiButtons, UiInputs, UiMetrics, UiText};
 
+/// Applies the modern-egui theme to an egui context.
+///
+/// This installs the built-in dark and light palettes, maps their semantic
+/// colors onto egui's widget visuals, and applies the shared typography and
+/// layout metrics.
+///
+/// Call this once when initializing the application:
+///
+/// ```no_run
+/// use modern_egui::theme;
+///
+/// # fn configure(ctx: &eframe::egui::Context) {
+/// theme::apply(ctx);
+/// # }
+/// ```
 pub fn apply(ctx: &Context) {
     let dark = Palette::dark();
     let light = Palette::light();

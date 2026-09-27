@@ -1,5 +1,10 @@
 use eframe::egui::{Color32, Context, Id, Theme};
 
+/// Semantic color palette used by the modern-egui theme.
+///
+/// A palette describes the colors used for surfaces, text, borders,
+/// interactive states, and semantic feedback. Separate palettes are provided
+/// for light and dark themes.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Palette {
     /// Window and panel background — the furthest-back layer.
@@ -34,16 +39,21 @@ pub struct Palette {
 
     /// Destructive actions.
     pub danger: Color32,
+    /// Danger color used while the pointer is over a destructive action.
     pub danger_hover: Color32,
+    /// Danger color used while a destructive action is pressed.
     pub danger_active: Color32,
     /// Text drawn on top of `danger`.
     pub on_danger: Color32,
 
+    /// Color used to indicate successful or positive states.
     pub success: Color32,
+    /// Color used to indicate warnings or states requiring attention.
     pub warning: Color32,
 }
 
 impl Palette {
+    /// Returns the built-in dark color palette.
     pub const fn dark() -> Self {
         Self {
             bg: Color32::from_rgb(17, 18, 23),
@@ -73,6 +83,7 @@ impl Palette {
         }
     }
 
+    /// Returns the built-in light color palette.
     pub const fn light() -> Self {
         Self {
             bg: Color32::from_rgb(244, 245, 248),
@@ -106,6 +117,9 @@ impl Palette {
         }
     }
 
+    /// Stores this palette in the egui context for the specified theme.
+    ///
+    /// Stored palettes are later retrieved by [`Palette::of`].
     pub fn store(self, ctx: &Context, theme: Theme) {
         ctx.data_mut(|d| d.insert_temp(Self::id(theme), self));
     }
@@ -114,12 +128,17 @@ impl Palette {
         Id::new(("modern_egui_palette", theme))
     }
 
+    /// Returns the palette associated with the context's currently active theme.
+    ///
+    /// If no palette has been stored in the context, the built-in palette for
+    /// the active theme is returned.
     pub fn of(ctx: &Context) -> Self {
         let theme = ctx.theme();
         ctx.data(|d| d.get_temp::<Self>(Self::id(theme)))
             .unwrap_or_else(|| Self::for_theme(theme))
     }
 
+    /// Returns the built-in palette corresponding to the given egui theme.
     pub fn for_theme(theme: Theme) -> Self {
         match theme {
             Theme::Dark => Self::dark(),
