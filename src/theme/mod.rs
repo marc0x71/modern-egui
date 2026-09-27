@@ -5,7 +5,7 @@ pub mod ui_ext;
 use eframe::egui::{Context, Stroke, Style, Theme};
 
 pub use palette::Palette;
-pub use ui_ext::{UiMetrics, UiText};
+pub use ui_ext::{UiButtons, UiInputs, UiMetrics, UiText};
 
 pub fn apply(ctx: &Context) {
     let dark = Palette::dark();

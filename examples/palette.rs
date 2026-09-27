@@ -1,9 +1,6 @@
 use eframe::egui::{self, Align, Button, Color32, Layout, RichText, Stroke, ThemePreference};
 
-use modern_egui::theme::{
-    self, Palette, UiMetrics, UiText, metrics,
-    ui_ext::{UiButtons, UiInputs},
-};
+use modern_egui::theme::{self, Palette, UiButtons, UiInputs, UiMetrics, UiText, metrics};
 
 fn main() -> eframe::Result {
     let title = "Modern egui — Theme Demo";
