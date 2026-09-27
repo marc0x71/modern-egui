@@ -209,4 +209,10 @@ Feedback and suggestions are welcome through
 
 ## License
 
-<!-- TODO: choose a license (e.g. MIT OR Apache-2.0, like egui) and add the LICENSE file(s). -->
+`modern-egui` is dual-licensed under the [MIT License](LICENSE-MIT) and the [Apache License 2.0](LICENSE-APACHE). You may choose either.
+
+## A note about AI
+
+I used AI to help me write some of the tests and documentation for this project. Writing tests can be a bit tedious, and English isn't my native language, so AI has been a useful tool to speed things up and improve the documentation.
+
+I still review, adapt, and run the generated tests, but I prefer to be transparent about how AI was used in this project.
