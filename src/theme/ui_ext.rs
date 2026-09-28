@@ -1,3 +1,10 @@
+//! Extension traits for [`egui::Ui`].
+//!
+//! Bring the traits into scope (they are re-exported from
+//! [`theme`](crate::theme)) to use semantic helpers on any `Ui`:
+//! [`UiText`] for typography, [`UiMetrics`] for spacing, [`UiButtons`] for
+//! button variants and [`UiInputs`] for text fields.
+
 use egui::{self, IntoAtoms, Response, RichText, Ui};
 
 use crate::theme::{Palette, buttons::StyledButton, metrics::*};

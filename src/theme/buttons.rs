@@ -1,3 +1,9 @@
+//! Themed button widget.
+//!
+//! [`StyledButton`] wraps [`egui::Button`] and applies the colors of a
+//! [`Variant`] taken from the active [`Palette`]. The
+//! [`UiButtons`](crate::theme::UiButtons) helpers are shortcuts for it.
+
 use egui::{self, Button, Color32, IntoAtoms, Stroke, Widget};
 
 use crate::theme::{Palette, metrics::RADIUS_SM};

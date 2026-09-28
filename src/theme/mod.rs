@@ -1,3 +1,9 @@
+//! The modern-egui theme: palette, design tokens and `Ui` helpers.
+//!
+//! Call [`apply`] once to install the theme, then use the extension traits
+//! re-exported here ([`UiText`], [`UiMetrics`], [`UiButtons`], [`UiInputs`])
+//! to build the interface.
+
 pub mod buttons;
 pub mod metrics;
 pub mod palette;

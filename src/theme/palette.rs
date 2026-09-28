@@ -1,3 +1,8 @@
+//! Semantic color palettes for the dark and light themes.
+//!
+//! See [`Palette`] for the available colors and how to read the palette of
+//! the active theme.
+
 use egui::{Color32, Context, Id, Theme};
 
 /// Semantic color palette used by the modern-egui theme.

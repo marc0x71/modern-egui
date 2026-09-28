@@ -1,3 +1,9 @@
+//! Design tokens: typography, spacing, control sizes, corner radii and layout.
+//!
+//! All values derive from the [`EM`] base unit, so the whole scale stays
+//! proportional. The constants can be used directly in layout code, while
+//! [`UiMetrics`](crate::theme::UiMetrics) offers semantic spacing helpers.
+
 use egui::{self, FontFamily, FontId, Style, TextStyle};
 
 /// Base unit used to derive the theme's typography and layout metrics.
