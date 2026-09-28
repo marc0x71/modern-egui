@@ -133,8 +133,39 @@ pub fn apply(style: &mut Style) {
     .into();
 
     style.spacing.item_spacing = egui::vec2(SPACE_2, SPACE_2);
-
     style.spacing.button_padding = egui::vec2(BUTTON_PAD_X, BUTTON_PAD_Y);
-
     style.spacing.interact_size.y = CONTROL_HEIGHT;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn apply_sets_spacing_metrics() {
+        let mut style = Style::default();
+
+        apply(&mut style);
+
+        assert_eq!(style.spacing.item_spacing, egui::vec2(SPACE_2, SPACE_2),);
+
+        assert_eq!(
+            style.spacing.button_padding,
+            egui::vec2(BUTTON_PAD_X, BUTTON_PAD_Y),
+        );
+
+        assert_eq!(style.spacing.interact_size.y, CONTROL_HEIGHT,);
+    }
+
+    #[test]
+    fn apply_sets_text_styles() {
+        let mut style = Style::default();
+
+        apply(&mut style);
+
+        assert_eq!(style.text_styles[&TextStyle::Body].size, FONT_MD,);
+        assert_eq!(style.text_styles[&TextStyle::Heading].size, FONT_XL,);
+        assert_eq!(style.text_styles[&TextStyle::Small].size, FONT_XS,);
+        assert_eq!(style.text_styles[&TextStyle::Monospace].size, FONT_SM,);
+    }
 }

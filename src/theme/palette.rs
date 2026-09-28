@@ -146,3 +146,38 @@ impl Palette {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use eframe::egui;
+
+    use super::*;
+
+    #[test]
+    fn dark_and_light_palettes_are_different() {
+        assert_ne!(Palette::dark(), Palette::light());
+    }
+
+    #[test]
+    fn for_theme_returns_expected_palette() {
+        assert_eq!(Palette::for_theme(Theme::Dark), Palette::dark(),);
+
+        assert_eq!(Palette::for_theme(Theme::Light), Palette::light(),);
+    }
+
+    #[test]
+    fn stored_palette_is_retrieved_from_context() {
+        let ctx = Context::default();
+
+        let custom = Palette {
+            accent: Color32::from_rgb(1, 2, 3),
+            ..Palette::dark()
+        };
+
+        custom.store(&ctx, Theme::Dark);
+
+        ctx.set_theme(egui::ThemePreference::Dark);
+
+        assert_eq!(Palette::of(&ctx), custom);
+    }
+}

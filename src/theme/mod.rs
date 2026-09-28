@@ -88,3 +88,32 @@ fn colors(s: &mut Style, p: &Palette) {
     s.visuals.warn_fg_color = p.warning;
     s.visuals.text_cursor.stroke = Stroke::new(2.0, p.accent);
 }
+
+#[cfg(test)]
+mod tests {
+    use eframe::egui;
+
+    use super::*;
+
+    #[test]
+    fn apply_installs_dark_palette() {
+        let ctx = Context::default();
+
+        apply(&ctx);
+
+        ctx.set_theme(egui::ThemePreference::Dark);
+
+        assert_eq!(Palette::of(&ctx), Palette::dark(),);
+    }
+
+    #[test]
+    fn apply_installs_light_palette() {
+        let ctx = Context::default();
+
+        apply(&ctx);
+
+        ctx.set_theme(egui::ThemePreference::Light);
+
+        assert_eq!(Palette::of(&ctx), Palette::light(),);
+    }
+}
