@@ -314,8 +314,8 @@ impl DemoApp {
         section_title(ui, "Buttons");
 
         ui.horizontal_wrapped(|ui| {
-            let _ = ui.button("Default");
             let _ = ui.primary_button("Primary");
+            let _ = ui.secondary_button("Secondary");
             let _ = ui.ghost_button("Ghost");
             let _ = ui.danger_button("Danger");
 

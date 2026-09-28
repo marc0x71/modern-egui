@@ -1,3 +1,4 @@
+pub mod buttons;
 pub mod metrics;
 pub mod palette;
 pub mod ui_ext;

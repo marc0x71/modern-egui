@@ -1,6 +1,6 @@
-use eframe::egui::{self, Color32, Response, RichText, Stroke, Ui};
+use eframe::egui::{self, IntoAtoms, Response, RichText, Ui};
 
-use crate::theme::{Palette, metrics::*};
+use crate::theme::{Palette, buttons::StyledButton, metrics::*};
 
 /// Spacing helpers for [`egui::Ui`] based on the theme's metric scale.
 pub trait UiMetrics {
@@ -153,96 +153,40 @@ pub trait UiButtons {
     ///
     /// The button automatically uses the palette's normal, hovered, and active
     /// accent states.
-    fn primary_button(&mut self, text: impl Into<egui::WidgetText>) -> Response;
+    fn primary_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response;
+
+    /// Adds a secondary action button with filled but subdued styling.
+    ///
+    /// Secondary buttons are intended for ordinary actions that should have less
+    /// visual emphasis than primary actions.
+    fn secondary_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response;
 
     /// Adds a destructive action button using the current theme's danger colors.
     ///
     /// The button automatically uses the palette's normal, hovered, and active
     /// danger states.
-    fn danger_button(&mut self, text: impl Into<egui::WidgetText>) -> Response;
+    fn danger_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response;
 
     /// Adds a low-emphasis button with a transparent background at rest.
     ///
     /// The button uses themed surface and border colors while hovered or active.
-    fn ghost_button(&mut self, text: impl Into<egui::WidgetText>) -> Response;
+    fn ghost_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response;
 }
 
 impl UiButtons for Ui {
-    fn primary_button(&mut self, text: impl Into<egui::WidgetText>) -> Response {
-        let p = Palette::of(self.ctx());
-
-        self.scope(|ui| {
-            let widgets = &mut ui.style_mut().visuals.widgets;
-
-            widgets.inactive.bg_fill = p.accent;
-            widgets.inactive.weak_bg_fill = p.accent;
-            widgets.inactive.bg_stroke = Stroke::new(1.0, p.accent);
-            widgets.inactive.fg_stroke.color = p.on_accent;
-
-            widgets.hovered.bg_fill = p.accent_hover;
-            widgets.hovered.weak_bg_fill = p.accent_hover;
-            widgets.hovered.bg_stroke = Stroke::new(1.0, p.accent_hover);
-            widgets.hovered.fg_stroke.color = p.on_accent;
-
-            widgets.active.bg_fill = p.accent_active;
-            widgets.active.weak_bg_fill = p.accent_active;
-            widgets.active.bg_stroke = Stroke::new(1.0, p.accent_active);
-            widgets.active.fg_stroke.color = p.on_accent;
-
-            ui.button(text)
-        })
-        .inner
+    fn primary_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response {
+        self.add(StyledButton::primary(text))
     }
 
-    fn danger_button(&mut self, text: impl Into<egui::WidgetText>) -> Response {
-        let p = Palette::of(self.ctx());
-
-        self.scope(|ui| {
-            let widgets = &mut ui.style_mut().visuals.widgets;
-
-            widgets.inactive.bg_fill = p.danger;
-            widgets.inactive.weak_bg_fill = p.danger;
-            widgets.inactive.bg_stroke = Stroke::new(1.0, p.danger);
-            widgets.inactive.fg_stroke.color = p.on_danger;
-
-            widgets.hovered.bg_fill = p.danger_hover;
-            widgets.hovered.weak_bg_fill = p.danger_hover;
-            widgets.hovered.bg_stroke = Stroke::new(1.0, p.danger_hover);
-            widgets.hovered.fg_stroke.color = p.on_danger;
-
-            widgets.active.bg_fill = p.danger_active;
-            widgets.active.weak_bg_fill = p.danger_active;
-            widgets.active.bg_stroke = Stroke::new(1.0, p.danger_active);
-            widgets.active.fg_stroke.color = p.on_danger;
-
-            ui.button(text)
-        })
-        .inner
+    fn secondary_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response {
+        self.add(StyledButton::secondary(text))
     }
 
-    fn ghost_button(&mut self, text: impl Into<egui::WidgetText>) -> Response {
-        let p = Palette::of(self.ctx());
+    fn danger_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response {
+        self.add(StyledButton::danger(text))
+    }
 
-        self.scope(|ui| {
-            let widgets = &mut ui.style_mut().visuals.widgets;
-
-            widgets.inactive.weak_bg_fill = Color32::TRANSPARENT;
-            widgets.inactive.bg_fill = Color32::TRANSPARENT;
-            widgets.inactive.bg_stroke = Stroke::new(1.0, Color32::TRANSPARENT);
-            widgets.inactive.fg_stroke.color = p.text;
-
-            widgets.hovered.weak_bg_fill = p.surface_alt;
-            widgets.hovered.bg_fill = p.surface_alt;
-            widgets.hovered.bg_stroke = Stroke::new(1.0, p.border);
-            widgets.hovered.fg_stroke.color = p.text_strong;
-
-            widgets.active.weak_bg_fill = p.elevated;
-            widgets.active.bg_fill = p.elevated;
-            widgets.active.bg_stroke = Stroke::new(1.0, p.border_strong);
-            widgets.active.fg_stroke.color = p.text_strong;
-
-            ui.button(text)
-        })
-        .inner
+    fn ghost_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response {
+        self.add(StyledButton::ghost(text))
     }
 }
