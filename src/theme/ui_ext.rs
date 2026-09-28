@@ -1,4 +1,4 @@
-use eframe::egui::{self, IntoAtoms, Response, RichText, Ui};
+use egui::{self, IntoAtoms, Response, RichText, Ui};
 
 use crate::theme::{Palette, buttons::StyledButton, metrics::*};
 

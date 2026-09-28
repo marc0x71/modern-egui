@@ -1,4 +1,4 @@
-use eframe::egui::{Color32, Context, Id, Theme};
+use egui::{Color32, Context, Id, Theme};
 
 /// Semantic color palette used by the modern-egui theme.
 ///
@@ -149,7 +149,7 @@ impl Palette {
 
 #[cfg(test)]
 mod tests {
-    use eframe::egui;
+    use egui;
 
     use super::*;
 

@@ -1,4 +1,4 @@
-use eframe::egui::{self, Button, Color32, IntoAtoms, Stroke, Widget};
+use egui::{self, Button, Color32, IntoAtoms, Stroke, Widget};
 
 use crate::theme::{Palette, metrics::RADIUS_SM};
 
@@ -148,7 +148,7 @@ impl<'a> StyledButton<'a> {
 }
 
 impl Widget for StyledButton<'_> {
-    fn ui(self, ui: &mut eframe::egui::Ui) -> egui::Response {
+    fn ui(self, ui: &mut egui::Ui) -> egui::Response {
         ui.scope(|ui| {
             self.variant.apply(ui);
             self.inner.ui(ui)
@@ -158,7 +158,7 @@ impl Widget for StyledButton<'_> {
 }
 
 impl Variant {
-    fn apply(&self, ui: &mut eframe::egui::Ui) {
+    fn apply(&self, ui: &mut egui::Ui) {
         let p = Palette::of(ui.ctx());
         let widgets = &mut ui.style_mut().visuals.widgets;
 

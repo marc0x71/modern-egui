@@ -3,7 +3,7 @@ pub mod metrics;
 pub mod palette;
 pub mod ui_ext;
 
-use eframe::egui::{Context, Stroke, Style, Theme};
+use egui::{Context, Stroke, Style, Theme};
 
 pub use palette::Palette;
 pub use ui_ext::{UiButtons, UiInputs, UiMetrics, UiText};
@@ -91,7 +91,7 @@ fn colors(s: &mut Style, p: &Palette) {
 
 #[cfg(test)]
 mod tests {
-    use eframe::egui;
+    use egui;
 
     use super::*;
 

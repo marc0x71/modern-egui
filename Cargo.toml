@@ -3,6 +3,15 @@ name = "modern-egui"
 version = "0.1.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
+rust-version = "1.95"                                                                 # required by egui 0.36
+description = "A modern theme and UI helpers (typography, spacing, buttons) for egui"
+repository = "https://github.com/marc0x71/modern-egui"
+readme = "README.md"
+keywords = ["egui", "theme", "gui", "ui", "style"]
+categories = ["gui"]
 
 [dependencies]
+egui = "0.36"
+
+[dev-dependencies]
 eframe = "0.36"

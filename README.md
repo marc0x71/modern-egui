@@ -20,21 +20,27 @@ spacing, buttons and inputs stay consistent across the whole interface.
   `ui.space_section()`, `ui.primary_button(..)` and `ui.text_input_hint(..)`.
 - **Styled buttons**: four button variants (primary, secondary, ghost, danger)
   available both as one-line helpers and as a `StyledButton` widget with the
-  same builder options as `egui::Button`.
+  most common `egui::Button` builder options.
 - **Automatic theme switching**: helpers read the active palette at draw time,
   so they follow `ctx.set_theme(..)` without extra code.
 
 ## Installation
 
-The crate is not published on crates.io yet. Add it as a git dependency:
+Add `modern-egui` to your `Cargo.toml` next to eframe:
 
 ```toml
 [dependencies]
 eframe = "0.36"
-modern-egui = { git = "https://github.com/marc0x71/modern-egui" }
+modern-egui = "0.1"
 ```
 
-`modern-egui` currently targets **eframe/egui 0.36** and Rust **edition 2024**.
+Or with cargo:
+
+```sh
+cargo add eframe modern-egui
+```
+
+`modern-egui` currently targets **eframe/egui 0.36** and requires Rust 1.95 or newer (same MSRV as egui 0.36).
 
 ## Quick start
 
@@ -198,8 +204,9 @@ they describe *why* the space is there.
 ### Styled buttons
 
 The `UiButtons` helpers are shortcuts for the `StyledButton` widget. Use the
-widget directly when you need to customize the button: it offers the same
-builder methods as `egui::Button` (`min_size`, `small`, `corner_radius`,
+widget directly when you need to customize the button: it offers the
+`egui::Button` builder methods that do not conflict with the variant colors
+(`min_size`, `small`, `corner_radius`,
 `sense`, `selected`, `shortcut_text`, `wrap`, `truncate`, `gap`) and applies
 the variant colors when it is added to the `Ui`.
 

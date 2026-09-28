@@ -1,4 +1,4 @@
-use eframe::egui::{self, FontFamily, FontId, Style, TextStyle};
+use egui::{self, FontFamily, FontId, Style, TextStyle};
 
 /// Base unit used to derive the theme's typography and layout metrics.
 pub const EM: f32 = 14.0;
