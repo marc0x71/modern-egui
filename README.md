@@ -18,6 +18,9 @@ spacing, buttons and inputs stay consistent across the whole interface.
   control sizes, corner radii and layout sizes.
 - **`Ui` extension traits**: semantic helpers such as `ui.section_title(..)`,
   `ui.space_section()`, `ui.primary_button(..)` and `ui.text_input_hint(..)`.
+- **Styled buttons**: four button variants (primary, secondary, ghost, danger)
+  available both as one-line helpers and as a `StyledButton` widget with the
+  same builder options as `egui::Button`.
 - **Automatic theme switching**: helpers read the active palette at draw time,
   so they follow `ctx.set_theme(..)` without extra code.
 
@@ -175,11 +178,15 @@ they describe *why* the space is there.
 
 **`UiButtons`** — button variants (all return `egui::Response`)
 
-| Method                | Use for                                  |
-|-----------------------|------------------------------------------|
-| `primary_button(text)`| The main action of a view                |
-| `ghost_button(text)`  | Secondary, low-emphasis actions          |
-| `danger_button(text)` | Destructive actions                      |
+| Method                   | Use for                                               |
+|--------------------------|-------------------------------------------------------|
+| `primary_button(text)`   | The main action of a view                             |
+| `secondary_button(text)` | Ordinary actions: filled, but quiet                   |
+| `ghost_button(text)`     | Tertiary actions, no fill until hovered (toolbars, lists) |
+| `danger_button(text)`    | Destructive actions                                   |
+
+`text` accepts anything that implements `egui::IntoAtoms`, the same input as
+`egui::Button::new`, so a plain `&str` or a `RichText` both work.
 
 **`UiInputs`** — fixed-size single-line text fields (`INPUT_WIDTH` × `INPUT_HEIGHT`)
 
@@ -188,12 +195,43 @@ they describe *why* the space is there.
 | `text_input(&mut text)`       | Plain text field                    |
 | `text_input_hint(&mut text, hint)` | Text field with placeholder    |
 
+### Styled buttons
+
+The `UiButtons` helpers are shortcuts for the `StyledButton` widget. Use the
+widget directly when you need to customize the button: it offers the same
+builder methods as `egui::Button` (`min_size`, `small`, `corner_radius`,
+`sense`, `selected`, `shortcut_text`, `wrap`, `truncate`, `gap`) and applies
+the variant colors when it is added to the `Ui`.
+
+```rust
+use modern_egui::theme::{metrics, buttons::StyledButton};
+
+// A wider primary button, e.g. for a dialog footer.
+let save = ui.add(
+    StyledButton::primary("Save")
+        .min_size(egui::vec2(120.0, metrics::CONTROL_HEIGHT)),
+);
+
+// A ghost button used as a toggle in a toolbar.
+if ui.add(StyledButton::ghost("Grid").selected(self.grid_view)).clicked() {
+    self.grid_view = !self.grid_view;
+}
+```
+
+Every variant has its own constructor (`primary`, `secondary`, `ghost`,
+`danger`); `StyledButton::new(text, Variant::…)` is also available when the
+variant is chosen at runtime. Buttons use `RADIUS_SM` corners by default.
+
 ## Examples
 
-The repository ships with a runnable showcase of the palette, typography,
-buttons, inputs, status badges, surfaces and tables, in both dark and light mode:
+The repository ships with two runnable examples:
 
 ```sh
+# The Quick start application shown above
+cargo run --example quickstart
+
+# A showcase of the palette, typography, buttons, inputs, status badges,
+# surfaces and tables, in both dark and light mode
 cargo run --example palette
 ```
 
