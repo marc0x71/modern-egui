@@ -6,7 +6,7 @@ A small modern theme and UI helper library for [egui](https://github.com/emilk/e
 function call, and adds a handful of `Ui` extension methods so that typography,
 spacing, buttons and inputs stay consistent across the whole interface.
 
-<img width="1897" height="1326" alt="screenshot-20260927-195742" src="https://github.com/user-attachments/assets/24fc25ee-01b6-4c59-a557-d6d6e2fe89aa" />
+<img width="1900" height="1324" alt="screenshot-20260928-095816" src="https://github.com/user-attachments/assets/c5e42447-f606-4487-9783-e9a4ca3ce8d8" />
 
 ## Features
 
