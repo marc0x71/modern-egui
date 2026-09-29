@@ -45,8 +45,8 @@
 //!   control sizes, corner radii, layout sizes);
 //! - [`theme::UiText`], [`theme::UiMetrics`], [`theme::UiButtons`] and
 //!   [`theme::UiInputs`] extend [`egui::Ui`] with semantic helpers;
-//! - [`theme::buttons::StyledButton`] is the themed button widget behind the
-//!   [`theme::UiButtons`] helpers.
+//! - [`theme::StyledButton`] and [`theme::StyledText`] are the themed widgets
+//!   behind the [`theme::UiButtons`] and [`theme::UiText`] helpers.
 //!
 //! The crate depends only on `egui`, so it works with any egui integration,
 //! not just eframe.

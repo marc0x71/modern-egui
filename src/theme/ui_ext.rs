@@ -5,9 +5,13 @@
 //! [`UiText`] for typography, [`UiMetrics`] for spacing, [`UiButtons`] for
 //! button variants and [`UiInputs`] for text fields.
 
-use egui::{self, IntoAtoms, Response, RichText, Ui};
+use egui::{self, IntoAtoms, Response, Ui};
 
-use crate::theme::{Palette, buttons::StyledButton, metrics::*};
+use crate::theme::{
+    buttons::StyledButton,
+    metrics::*,
+    text::{StyledText, TextColor, TextSize},
+};
 
 /// Spacing helpers for [`egui::Ui`] based on the theme's metric scale.
 pub trait UiMetrics {
@@ -76,48 +80,66 @@ impl UiMetrics for Ui {
 }
 
 /// Typography helpers for applying common semantic text roles to [`egui::Ui`].
+///
+/// These methods are semantic presets built on top of [`StyledText`].
+/// Use `StyledText` directly when more control over size, color, or emphasis
+/// is required.
 pub trait UiText {
     /// Adds a prominent section title using the theme's section typography.
-    fn section_title(&mut self, text: impl Into<String>);
+    fn section_title(&mut self, text: impl Into<String>) -> egui::Response;
 
     /// Adds a card or panel title using the theme's card-title typography.
-    fn card_title(&mut self, text: impl Into<String>);
+    fn card_title(&mut self, text: impl Into<String>) -> egui::Response;
 
     /// Adds secondary text using the theme's muted text styling.
-    fn muted_label(&mut self, text: impl Into<String>);
+    fn muted_label(&mut self, text: impl Into<String>) -> egui::Response;
 
     /// Adds low-emphasis metadata using the smallest text size.
-    fn metadata_label(&mut self, text: impl Into<String>);
+    fn metadata_label(&mut self, text: impl Into<String>) -> egui::Response;
 
     /// Adds emphasized body text using the theme's strong text color.
-    fn strong_label(&mut self, text: impl Into<String>);
+    fn strong_label(&mut self, text: impl Into<String>) -> egui::Response;
 }
 
-impl UiText for Ui {
-    fn section_title(&mut self, text: impl Into<String>) {
-        self.label(egui::RichText::new(text.into()).size(FONT_LG).strong());
+impl UiText for egui::Ui {
+    fn section_title(&mut self, text: impl Into<String>) -> egui::Response {
+        self.add(
+            StyledText::new(text)
+                .size(TextSize::Lg)
+                .color(TextColor::Strong),
+        )
     }
 
-    fn card_title(&mut self, text: impl Into<String>) {
-        self.label(egui::RichText::new(text.into()).size(FONT_CT).strong());
+    fn card_title(&mut self, text: impl Into<String>) -> egui::Response {
+        self.add(
+            StyledText::new(text)
+                .size(TextSize::CardTitle)
+                .color(TextColor::Strong),
+        )
     }
 
-    fn muted_label(&mut self, text: impl Into<String>) {
-        self.label(egui::RichText::new(text.into()).size(FONT_SM).weak());
+    fn muted_label(&mut self, text: impl Into<String>) -> egui::Response {
+        self.add(
+            StyledText::new(text)
+                .size(TextSize::Sm)
+                .color(TextColor::Muted),
+        )
     }
 
-    fn metadata_label(&mut self, text: impl Into<String>) {
-        self.label(egui::RichText::new(text.into()).size(FONT_XS).weak());
+    fn metadata_label(&mut self, text: impl Into<String>) -> egui::Response {
+        self.add(
+            StyledText::new(text)
+                .size(TextSize::Xs)
+                .color(TextColor::Muted),
+        )
     }
 
-    fn strong_label(&mut self, text: impl Into<String>) {
-        let p = Palette::of(self.ctx());
-        self.label(
-            RichText::new(text.into())
-                .size(FONT_MD)
-                .strong()
-                .color(p.text_strong),
-        );
+    fn strong_label(&mut self, text: impl Into<String>) -> egui::Response {
+        self.add(
+            StyledText::new(text)
+                .size(TextSize::Md)
+                .color(TextColor::Strong),
+        )
     }
 }
 

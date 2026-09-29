@@ -7,11 +7,14 @@
 pub mod buttons;
 pub mod metrics;
 pub mod palette;
+pub mod text;
 pub mod ui_ext;
 
 use egui::{Context, Stroke, Style, Theme};
 
+pub use buttons::{StyledButton, Variant};
 pub use palette::Palette;
+pub use text::{StyledText, TextColor, TextSize};
 pub use ui_ext::{UiButtons, UiInputs, UiMetrics, UiText};
 
 /// Applies the modern-egui theme to an egui context.

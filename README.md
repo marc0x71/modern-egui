@@ -25,6 +25,8 @@ spacing, buttons and inputs stay consistent across the whole interface.
 - **Styled buttons**: four button variants (primary, secondary, ghost, danger)
   available both as one-line helpers and as a `StyledButton` widget with the
   most common `egui::Button` builder options.
+- **Styled text**: a `StyledText` widget that combines the typography scale
+  with semantic text colors, used by the `UiText` helpers.
 - **Automatic theme switching**: helpers read the active palette at draw time,
   so they follow `ctx.set_theme(..)` without extra code.
 
@@ -35,7 +37,7 @@ Add `modern-egui` to your `Cargo.toml` next to eframe:
 ```toml
 [dependencies]
 eframe = "0.36"
-modern-egui = "0.1"
+modern-egui = "0.2"
 ```
 
 Or with cargo:
@@ -163,15 +165,18 @@ egui::Panel::left("nav")
 
 Bring the traits into scope to use the helpers on any `egui::Ui`.
 
-**`UiText`** — typography roles
+**`UiText`** — typography roles (all return `egui::Response`)
 
-| Method                 | Result                                   |
-|------------------------|------------------------------------------|
-| `section_title(text)`  | Large, bold title (`FONT_LG`)            |
-| `card_title(text)`     | Bold card heading (`FONT_CT`)            |
-| `strong_label(text)`   | Body-size text in `text_strong` color    |
-| `muted_label(text)`    | Small, weak secondary text (`FONT_SM`)   |
-| `metadata_label(text)` | Extra-small, weak text (`FONT_XS`)       |
+| Method                 | Size                    | Color    |
+|------------------------|-------------------------|----------|
+| `section_title(text)`  | `Lg` (`FONT_LG`)        | `Strong` |
+| `card_title(text)`     | `CardTitle` (`FONT_CT`) | `Strong` |
+| `strong_label(text)`   | `Md` (`FONT_MD`)        | `Strong` |
+| `muted_label(text)`    | `Sm` (`FONT_SM`)        | `Muted`  |
+| `metadata_label(text)` | `Xs` (`FONT_XS`)        | `Muted`  |
+
+These are presets built on top of [`StyledText`](#styled-text): use the
+widget directly when you need a different combination.
 
 **`UiMetrics`** — vertical spacing
 
@@ -215,7 +220,7 @@ widget directly when you need to customize the button: it offers the
 the variant colors when it is added to the `Ui`.
 
 ```rust
-use modern_egui::theme::{metrics, buttons::StyledButton};
+use modern_egui::theme::{metrics, StyledButton};
 
 // A wider primary button, e.g. for a dialog footer.
 let save = ui.add(
@@ -232,6 +237,45 @@ if ui.add(StyledButton::ghost("Grid").selected(self.grid_view)).clicked() {
 Every variant has its own constructor (`primary`, `secondary`, `ghost`,
 `danger`); `StyledButton::new(text, Variant::…)` is also available when the
 variant is chosen at runtime. Buttons use `RADIUS_SM` corners by default.
+
+### Styled text
+
+`StyledText` renders a label with a semantic size and color from the theme.
+Semantic colors are resolved against the active `Palette` when the widget is
+drawn, so the text follows theme switches automatically.
+
+```rust
+use modern_egui::theme::{StyledText, TextColor, TextSize};
+
+ui.add(
+    StyledText::new("Settings")
+        .size(TextSize::Lg)
+        .color(TextColor::Strong),
+);
+
+// Semantic colors work well for inline status messages.
+ui.add(StyledText::new("Saved").size(TextSize::Sm).color(TextColor::Success));
+```
+
+By default the text uses `TextSize::Md` and `TextColor::Text`.
+
+**`TextSize`** maps to the font-size tokens in `metrics`:
+
+| Variant     | Token       | Intended for                     |
+|-------------|-------------|----------------------------------|
+| `Xs`        | `FONT_XS`   | Metadata, low-emphasis details   |
+| `Sm`        | `FONT_SM`   | Secondary or supporting content  |
+| `Md`        | `FONT_MD`   | Body text (default)              |
+| `CardTitle` | `FONT_CT`   | Card and panel titles            |
+| `Lg`        | `FONT_LG`   | Section titles                   |
+| `Xl`        | `FONT_XL`   | Headings                         |
+| `Xxl`       | `FONT_2XL`  | Page or application titles       |
+
+`TextSize::value()` returns the size in points, if you need it elsewhere.
+
+**`TextColor`** selects a palette role: `Text` (default), `Strong`, `Muted`,
+`Accent`, `Success`, `Warning` and `Danger`. `Custom(Color32)` uses an
+explicit color instead, which does not change with the theme.
 
 ## Examples
 
