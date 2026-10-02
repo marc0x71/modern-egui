@@ -8,7 +8,7 @@ A small modern theme and UI helper library for [egui](https://github.com/emilk/e
 
 `modern-egui` gives your egui application a clean, contemporary look with a single
 function call, and adds a handful of `Ui` extension methods so that typography,
-spacing, buttons and inputs stay consistent across the whole interface.
+spacing, buttons, inputs and cards stay consistent across the whole interface.
 
 <img width="1900" height="1324" alt="screenshot-20260928-095816" src="https://github.com/user-attachments/assets/c5e42447-f606-4487-9783-e9a4ca3ce8d8" />
 
@@ -27,6 +27,8 @@ spacing, buttons and inputs stay consistent across the whole interface.
   most common `egui::Button` builder options.
 - **Styled text**: a `StyledText` widget that combines the typography scale
   with semantic text colors, used by the `UiText` helpers.
+- **Cards**: themed containers with the shared border, radius and padding,
+  in three surface levels plus a variant that highlights itself on hover.
 - **Automatic theme switching**: helpers read the active palette at draw time,
   so they follow `ctx.set_theme(..)` without extra code.
 
@@ -209,6 +211,56 @@ they describe *why* the space is there.
 |-------------------------------|-------------------------------------|
 | `text_input(&mut text)`       | Plain text field                    |
 | `text_input_hint(&mut text, hint)` | Text field with placeholder    |
+
+**`UiPanels`** — cards for grouping related content
+
+| Method                                     | Description                                        |
+|--------------------------------------------|----------------------------------------------------|
+| `card(add_contents)`                       | Card with the default `Surface` background         |
+| `card_with_variant(variant, add_contents)` | Card with the colors of the given `PanelVariant`   |
+| `interactive_card(add_contents)`           | `Surface` card that turns `Elevated` while hovered |
+
+All cards share a 1 px border, `RADIUS_MD` corners and `PANEL_PADDING` inner
+margin. `PanelVariant` selects the fill from the palette, together with a
+matching border color:
+
+| Variant      | Fill          | Use for                                   |
+|--------------|---------------|-------------------------------------------|
+| `Surface`    | `surface`     | Regular cards above the window background |
+| `SurfaceAlt` | `surface_alt` | Nested or less prominent content          |
+| `Elevated`   | `elevated`    | Content that must stand out               |
+
+```rust
+use modern_egui::theme::{UiPanels, UiText};
+use modern_egui::theme::ui_ext::PanelVariant;
+
+ui.card(|ui| {
+    ui.card_title("Profile");
+    ui.muted_label("Visible to other users.");
+});
+
+ui.card_with_variant(PanelVariant::SurfaceAlt, |ui| {
+    ui.muted_label("Nothing to show yet.");
+});
+```
+
+Every method returns an `egui::InnerResponse`: the value produced by the
+closure plus the `Response` of the whole card. A card is only as large as its
+content; call `ui.set_min_width(ui.available_width())` inside the closure to
+make it fill the available width.
+
+`interactive_card` only senses hovering. To make it clickable, upgrade its
+response:
+
+```rust
+let card = ui.interactive_card(|ui| {
+    ui.card_title("Open project");
+});
+
+if card.response.interact(egui::Sense::click()).clicked() {
+    // handle the click
+}
+```
 
 ### Styled buttons
 
