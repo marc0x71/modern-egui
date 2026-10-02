@@ -233,13 +233,13 @@ pub enum PanelVariant {
     Surface,
     /// Secondary background for nested or less prominent content.
     ///
-    /// Uses [`Palette::surface_alt`] with [`Palette::border_strong`], since the
-    /// regular border has too little contrast against this fill.
+    /// Uses [`Palette::surface_alt`] with the regular [`Palette::border`].
     SurfaceAlt,
     /// Raised background for content that must stand out from the cards
     /// around it.
     ///
-    /// Uses [`Palette::elevated`] with the regular [`Palette::border_strong`].
+    /// Uses [`Palette::elevated`] with [`Palette::border_strong`], which
+    /// marks the card edge more clearly than the regular border.
     Elevated,
 }
 

@@ -344,7 +344,7 @@ cargo run --example palette
 
 ## Project status
 
-`modern-egui` is at an early stage (`0.1.0`): the API may change between releases.
+`modern-egui` is at an early stage: the API may change between releases.
 Feedback and suggestions are welcome through
 [issues](https://github.com/marc0x71/modern-egui/issues).
 
