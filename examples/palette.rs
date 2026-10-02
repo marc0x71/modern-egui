@@ -1,6 +1,8 @@
 use eframe::egui::{self, Align, Button, Color32, Layout, RichText, Stroke, ThemePreference};
 
-use modern_egui::theme::{self, Palette, UiButtons, UiInputs, UiMetrics, UiText, metrics};
+use modern_egui::theme::{
+    self, Palette, UiButtons, UiInputs, UiMetrics, UiPanels, UiText, metrics, ui_ext::PanelVariant,
+};
 
 fn main() -> eframe::Result {
     let title = "Modern egui — Theme Demo";
@@ -186,12 +188,8 @@ impl DemoApp {
 
         let swatch_size = metrics::EM * 1.8;
 
-        let response = egui::Frame::new()
-            .fill(p.surface)
-            .stroke(Stroke::new(1.0, p.border))
-            .corner_radius(metrics::RADIUS_MD)
-            .inner_margin(metrics::SPACE_3)
-            .show(ui, |ui| {
+        let response = ui
+            .interactive_card(|ui| {
                 ui.set_min_width(content_width);
                 ui.set_max_width(content_width);
 
@@ -514,7 +512,7 @@ impl DemoApp {
                     "Surface",
                     "Card principale sopra \
                      al background.",
-                    p.surface,
+                    PanelVariant::Surface,
                 );
 
                 surface_card(
@@ -522,7 +520,7 @@ impl DemoApp {
                     "Surface alt",
                     "Controlli, hover e \
                      superfici secondarie.",
-                    p.surface_alt,
+                    PanelVariant::SurfaceAlt,
                 );
 
                 surface_card(
@@ -530,7 +528,7 @@ impl DemoApp {
                     "Elevated",
                     "Finestre, popup e \
                      contenuti sopraelevati.",
-                    p.elevated,
+                    PanelVariant::Elevated,
                 );
             });
         } else {
@@ -539,7 +537,7 @@ impl DemoApp {
                 "Surface",
                 "Card principale sopra \
                  al background.",
-                p.surface,
+                PanelVariant::Surface,
             );
             ui.space_group();
 
@@ -548,7 +546,7 @@ impl DemoApp {
                 "Surface alt",
                 "Controlli, hover e \
                  superfici secondarie.",
-                p.surface_alt,
+                PanelVariant::SurfaceAlt,
             );
             ui.space_group();
 
@@ -557,7 +555,7 @@ impl DemoApp {
                 "Elevated",
                 "Finestre, popup e \
                  contenuti sopraelevati.",
-                p.elevated,
+                PanelVariant::Elevated,
             );
         }
     }
@@ -796,46 +794,34 @@ fn typography_sample(ui: &mut egui::Ui, text: &str, size: f32, color: Color32) {
 }
 
 fn demo_card(ui: &mut egui::Ui, add_contents: impl FnOnce(&mut egui::Ui)) {
-    let p = Palette::of(ui.ctx());
+    ui.card(|ui| {
+        ui.set_min_width(ui.available_width());
 
-    egui::Frame::new()
-        .fill(p.surface)
-        .stroke(Stroke::new(1.0, p.border))
-        .corner_radius(metrics::RADIUS_MD)
-        .inner_margin(metrics::PANEL_PADDING)
-        .show(ui, |ui| {
-            ui.set_min_width(ui.available_width());
-
-            add_contents(ui);
-        });
+        add_contents(ui);
+    });
 }
 
-fn surface_card(ui: &mut egui::Ui, title: &str, description: &str, fill: Color32) {
+fn surface_card(ui: &mut egui::Ui, title: &str, description: &str, variant: PanelVariant) {
     let p = Palette::of(ui.ctx());
 
-    egui::Frame::new()
-        .fill(fill)
-        .stroke(Stroke::new(1.0, p.border))
-        .corner_radius(metrics::RADIUS_MD)
-        .inner_margin(metrics::PANEL_PADDING)
-        .show(ui, |ui| {
-            ui.set_min_width(ui.available_width());
+    ui.card_with_variant(variant, |ui: &mut egui::Ui| {
+        ui.set_min_width(ui.available_width());
 
-            ui.label(
-                RichText::new(title)
-                    .size(metrics::FONT_CT)
-                    .strong()
-                    .color(p.text_strong),
-            );
+        ui.label(
+            RichText::new(title)
+                .size(metrics::FONT_CT)
+                .strong()
+                .color(p.text_strong),
+        );
 
-            ui.space_inline();
+        ui.space_inline();
 
-            ui.label(
-                RichText::new(description)
-                    .size(metrics::FONT_SM)
-                    .color(p.text_muted),
-            );
-        });
+        ui.label(
+            RichText::new(description)
+                .size(metrics::FONT_SM)
+                .color(p.text_muted),
+        );
+    });
 }
 
 fn mini_color(ui: &mut egui::Ui, name: &str, color: Color32) {

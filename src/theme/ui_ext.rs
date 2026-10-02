@@ -3,13 +3,14 @@
 //! Bring the traits into scope (they are re-exported from
 //! [`theme`](crate::theme)) to use semantic helpers on any `Ui`:
 //! [`UiText`] for typography, [`UiMetrics`] for spacing, [`UiButtons`] for
-//! button variants and [`UiInputs`] for text fields.
+//! button variants, [`UiInputs`] for text fields and [`UiPanels`] for cards.
 
-use egui::{self, IntoAtoms, Response, Ui};
+use egui::{self, Color32, InnerResponse, IntoAtoms, Response, Stroke, Ui};
 
 use crate::theme::{
+    Palette,
     buttons::StyledButton,
-    metrics::*,
+    metrics::{self, *},
     text::{StyledText, TextColor, TextSize},
 };
 
@@ -217,5 +218,161 @@ impl UiButtons for Ui {
 
     fn ghost_button<'a>(&mut self, text: impl IntoAtoms<'a>) -> egui::Response {
         self.add(StyledButton::ghost(text))
+    }
+}
+
+/// Background level of a card, mapped to the surface colors of the [`Palette`].
+///
+/// Each variant selects both the fill and the border color, so that the card
+/// stays readable against the layer it is meant to sit on.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PanelVariant {
+    /// Default card background, placed directly above the window background.
+    ///
+    /// Uses [`Palette::surface`] with the regular [`Palette::border`].
+    Surface,
+    /// Secondary background for nested or less prominent content.
+    ///
+    /// Uses [`Palette::surface_alt`] with [`Palette::border_strong`], since the
+    /// regular border has too little contrast against this fill.
+    SurfaceAlt,
+    /// Raised background for content that must stand out from the cards
+    /// around it.
+    ///
+    /// Uses [`Palette::elevated`] with the regular [`Palette::border_strong`].
+    Elevated,
+}
+
+impl PanelVariant {
+    /// Returns the fill color of this variant in the given palette.
+    fn into_color(self, palette: Palette) -> Color32 {
+        match self {
+            PanelVariant::Surface => palette.surface,
+            PanelVariant::SurfaceAlt => palette.surface_alt,
+            PanelVariant::Elevated => palette.elevated,
+        }
+    }
+    /// Returns the border color of this variant in the given palette.
+    fn into_border_color(self, palette: Palette) -> Color32 {
+        match self {
+            PanelVariant::Surface | PanelVariant::SurfaceAlt => palette.border,
+            PanelVariant::Elevated => palette.border_strong,
+        }
+    }
+}
+
+/// Themed containers for grouping related content.
+///
+/// All cards share the same geometry: a 1 px border, [`metrics::RADIUS_MD`]
+/// corners and [`metrics::PANEL_PADDING`] inner margin. Colors are read from
+/// the [`Palette`] of the current context, so cards follow the active theme.
+///
+/// A card is only as large as its content. To make it fill the available
+/// width, call `ui.set_min_width(ui.available_width())` inside the closure.
+///
+/// # Examples
+///
+/// ```
+/// use modern_egui::theme::UiPanels;
+/// use modern_egui::theme::ui_ext::PanelVariant;
+///
+/// # fn show(ui: &mut egui::Ui) {
+/// ui.card(|ui| {
+///     ui.label("Default card");
+/// });
+///
+/// ui.card_with_variant(PanelVariant::Elevated, |ui| {
+///     ui.label("Raised card");
+/// });
+/// # }
+/// ```
+pub trait UiPanels {
+    /// Shows a card with the default [`PanelVariant::Surface`] background.
+    ///
+    /// Shorthand for [`card_with_variant`](Self::card_with_variant) with
+    /// [`PanelVariant::Surface`].
+    ///
+    /// Returns the value produced by `add_contents` together with the
+    /// [`Response`] of the whole card, padding included.
+    fn card<R>(&mut self, add_contents: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R>;
+
+    /// Shows a card that highlights itself while the pointer is over it.
+    ///
+    /// At rest the card looks like [`card`](Self::card); while hovered it is
+    /// painted with the [`PanelVariant::Elevated`] colors instead.
+    ///
+    /// The returned [`Response`] covers the whole card, padding included, but
+    /// only senses hovering. To react to clicks, upgrade it with
+    /// [`Response::interact`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use modern_egui::theme::UiPanels;
+    ///
+    /// # fn show(ui: &mut egui::Ui) {
+    /// let card = ui.interactive_card(|ui| {
+    ///     ui.label("Click me");
+    /// });
+    ///
+    /// if card.response.interact(egui::Sense::click()).clicked() {
+    ///     // handle the click
+    /// }
+    /// # }
+    /// ```
+    fn interactive_card<R>(&mut self, add_contents: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R>;
+
+    /// Shows a card with the fill and border colors of the given `variant`.
+    ///
+    /// Returns the value produced by `add_contents` together with the
+    /// [`Response`] of the whole card, padding included.
+    fn card_with_variant<R>(
+        &mut self,
+        variant: PanelVariant,
+        add_contents: impl FnOnce(&mut Ui) -> R,
+    ) -> InnerResponse<R>;
+}
+
+impl UiPanels for Ui {
+    fn card_with_variant<R>(
+        &mut self,
+        variant: PanelVariant,
+        add_contents: impl FnOnce(&mut Ui) -> R,
+    ) -> InnerResponse<R> {
+        let p = Palette::of(self.ctx());
+
+        egui::Frame::new()
+            .fill(variant.into_color(p))
+            .stroke(Stroke::new(1.0, variant.into_border_color(p)))
+            .corner_radius(metrics::RADIUS_MD)
+            .inner_margin(metrics::PANEL_PADDING)
+            .show(self, add_contents)
+    }
+
+    fn card<R>(&mut self, add_contents: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
+        self.card_with_variant(PanelVariant::Surface, add_contents)
+    }
+
+    fn interactive_card<R>(&mut self, add_contents: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
+        // ref: https://docs.rs/crate/egui/latest/source/src/containers/frame.rs#74
+        let p = Palette::of(self.ctx());
+        let mut frame = egui::Frame::new()
+            .fill(PanelVariant::Surface.into_color(p))
+            .stroke(Stroke::new(1.0, PanelVariant::Surface.into_border_color(p)))
+            .corner_radius(metrics::RADIUS_MD)
+            .inner_margin(metrics::PANEL_PADDING)
+            .begin(self);
+
+        let inner = add_contents(&mut frame.content_ui);
+
+        let response = frame.allocate_space(self);
+
+        if response.hovered() {
+            frame.frame.fill = PanelVariant::Elevated.into_color(p);
+            frame.frame.stroke = Stroke::new(1.0, PanelVariant::Elevated.into_border_color(p));
+        }
+        frame.paint(self);
+
+        InnerResponse::new(inner, response)
     }
 }
