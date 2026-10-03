@@ -8,6 +8,13 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
 
 ## [Unreleased]
 
+### Added
+
+- `InputWidth` enum (`Standard`, `Fixed`, `Fill`) to choose the width of a
+  themed text input.
+- `UiInputs::text_input_with_width` and `UiInputs::text_input_hint_with_width`,
+  variants of the existing helpers that take an `InputWidth`.
+
 ## [0.2.1] - 2026-10-02
 
 ### Added

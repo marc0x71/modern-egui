@@ -144,23 +144,80 @@ impl UiText for egui::Ui {
     }
 }
 
+/// Width of a themed single-line text input.
+///
+/// The height is always [`INPUT_HEIGHT`]; only the
+/// width changes.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum InputWidth {
+    /// The theme's standard width, [`INPUT_WIDTH`].
+    Standard,
+    /// An explicit width in logical points.
+    Fixed(f32),
+    /// All the width still available in the current layout, as reported by
+    /// [`Ui::available_width`] when the input is added.
+    ///
+    /// In a horizontal layout this is the space left after the widgets
+    /// already placed on the row.
+    Fill,
+}
+
 /// Convenience helpers for themed single-line text inputs.
+///
+/// Every input uses the theme's standard height and centers its text
+/// vertically. The width defaults to [`InputWidth::Standard`]; use the
+/// `*_with_width` methods to choose a different one.
 pub trait UiInputs {
     /// Adds a single-line text input using the theme's standard input size.
     fn text_input(&mut self, text: &mut String) -> Response;
 
+    /// Adds a single-line text input with the given [`InputWidth`] and the
+    /// theme's standard input height.
+    fn text_input_with_width(&mut self, text: &mut String, width: InputWidth) -> Response;
+
     /// Adds a single-line text input with placeholder text using the theme's
     /// standard input size.
+    ///
+    /// The hint is shown only while `text` is empty.
     fn text_input_hint(&mut self, text: &mut String, hint: impl Into<egui::WidgetText>)
     -> Response;
+
+    /// Adds a single-line text input with placeholder text, the given
+    /// [`InputWidth`] and the theme's standard input height.
+    ///
+    /// The hint is shown only while `text` is empty.
+    fn text_input_hint_with_width(
+        &mut self,
+        text: &mut String,
+        hint: impl Into<egui::WidgetText>,
+        width: InputWidth,
+    ) -> Response;
+}
+
+fn add_text_input(
+    ui: &mut Ui,
+    text: &mut String,
+    hint: Option<egui::WidgetText>,
+    width: InputWidth,
+) -> Response {
+    let width = match width {
+        InputWidth::Standard => metrics::INPUT_WIDTH,
+        InputWidth::Fill => ui.available_width(),
+        InputWidth::Fixed(w) => w,
+    };
+
+    let mut input = egui::TextEdit::singleline(text).vertical_align(egui::Align::Center);
+
+    if let Some(hint) = hint {
+        input = input.hint_text(hint);
+    }
+
+    ui.add_sized([width, metrics::INPUT_HEIGHT], input)
 }
 
 impl UiInputs for Ui {
     fn text_input(&mut self, text: &mut String) -> Response {
-        self.add_sized(
-            [INPUT_WIDTH, INPUT_HEIGHT],
-            egui::TextEdit::singleline(text).vertical_align(egui::Align::Center),
-        )
+        add_text_input(self, text, None, InputWidth::Standard)
     }
 
     fn text_input_hint(
@@ -168,12 +225,20 @@ impl UiInputs for Ui {
         text: &mut String,
         hint: impl Into<egui::WidgetText>,
     ) -> Response {
-        self.add_sized(
-            [INPUT_WIDTH, INPUT_HEIGHT],
-            egui::TextEdit::singleline(text)
-                .vertical_align(egui::Align::Center)
-                .hint_text(hint),
-        )
+        add_text_input(self, text, Some(hint.into()), InputWidth::Standard)
+    }
+
+    fn text_input_with_width(&mut self, text: &mut String, width: InputWidth) -> Response {
+        add_text_input(self, text, None, width)
+    }
+
+    fn text_input_hint_with_width(
+        &mut self,
+        text: &mut String,
+        hint: impl Into<egui::WidgetText>,
+        width: InputWidth,
+    ) -> Response {
+        add_text_input(self, text, Some(hint.into()), width)
     }
 }
 

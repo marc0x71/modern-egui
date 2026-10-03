@@ -205,12 +205,30 @@ they describe *why* the space is there.
 `text` accepts anything that implements `egui::IntoAtoms`, the same input as
 `egui::Button::new`, so a plain `&str` or a `RichText` both work.
 
-**`UiInputs`** — fixed-size single-line text fields (`INPUT_WIDTH` × `INPUT_HEIGHT`)
+**`UiInputs`** — single-line text fields with the standard `INPUT_HEIGHT`
 
-| Method                        | Description                         |
-|-------------------------------|-------------------------------------|
-| `text_input(&mut text)`       | Plain text field                    |
-| `text_input_hint(&mut text, hint)` | Text field with placeholder    |
+| Method                                               | Description                                            |
+|------------------------------------------------------|--------------------------------------------------------|
+| `text_input(&mut text)`                              | Plain text field, `INPUT_WIDTH` wide                   |
+| `text_input_with_width(&mut text, width)`            | Plain text field with the given `InputWidth`           |
+| `text_input_hint(&mut text, hint)`                   | Text field with placeholder, `INPUT_WIDTH` wide        |
+| `text_input_hint_with_width(&mut text, hint, width)` | Text field with placeholder and the given `InputWidth` |
+
+`InputWidth` selects the width of the field:
+
+| Variant      | Width                                         |
+|--------------|-----------------------------------------------|
+| `Standard`   | `INPUT_WIDTH`, the default                    |
+| `Fixed(f32)` | An explicit width in logical points           |
+| `Fill`       | All the width available in the current layout |
+
+```rust
+use modern_egui::theme::UiInputs;
+use modern_egui::theme::ui_ext::InputWidth;
+
+ui.text_input_with_width(&mut self.zip_code, InputWidth::Fixed(80.0));
+ui.text_input_hint_with_width(&mut self.search, "Search...", InputWidth::Fill);
+```
 
 **`UiPanels`** — cards for grouping related content
 
