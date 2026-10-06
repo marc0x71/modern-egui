@@ -20,6 +20,9 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
 - `UiLayouts` trait with `center_row`, a row of widgets centered horizontally
   in the available width.
 - `InputWidth` is re-exported from the `theme` module.
+- `Palette` and `rgb_hex` are re-exported from the `prelude` module.
+- `Variant` derives `Debug`, `Clone`, `Copy`, `PartialEq` and `Eq`;
+  `TextSize` and `TextColor` derive `PartialEq` and `Eq`.
 
 ### Changed
 

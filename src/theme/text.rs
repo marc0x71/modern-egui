@@ -9,7 +9,7 @@ use crate::theme::{Palette, metrics};
 /// Semantic text sizes provided by the modern-egui typography scale.
 ///
 /// Each variant maps to one of the font-size tokens defined in [`metrics`].
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TextSize {
     /// Extra-small text, intended for metadata and low-emphasis information.
     Xs,
@@ -46,7 +46,7 @@ impl TextSize {
 ///
 /// Semantic variants are resolved against the currently active [`Palette`],
 /// allowing text to automatically adapt to light and dark themes.
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum TextColor {
     #[default]
     /// Uses the default body text color.

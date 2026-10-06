@@ -2,6 +2,6 @@
 //! Convenience re-exports: `use modern_egui::prelude::*;`
 
 pub use crate::theme::{
-    InputWidth, PanelVariant, TextColor, TextSize, UiButtons, UiInputs, UiLayouts, UiMetrics,
-    UiPanels, UiText,
+    InputWidth, Palette, PanelVariant, TextColor, TextSize, UiButtons, UiInputs, UiLayouts,
+    UiMetrics, UiPanels, UiText, rgb_hex,
 };

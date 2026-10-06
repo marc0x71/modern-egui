@@ -12,6 +12,7 @@ use crate::theme::{Palette, metrics::RADIUS_SM};
 ///
 /// Each variant maps to a set of colors from the active [`Palette`], so the
 /// button follows the current dark or light theme automatically.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Variant {
     /// Primary default actions
     Primary,
