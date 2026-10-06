@@ -18,6 +18,9 @@ spacing, buttons, inputs and cards stay consistent across the whole interface.
 - **Semantic color palette**: backgrounds, surfaces, borders, text, accent, danger,
   success and warning colors, tuned separately for dark and light mode
   (the light accent meets WCAG AA contrast for text on accent).
+- **Custom palettes**: `theme::apply_with(ctx, dark, light)` installs your own
+  colors in place of the built-in ones, for both the themed helpers and
+  egui's own widgets.
 - **Design tokens**: a single `EM` base unit drives the font scale, spacing scale,
   control sizes, corner radii and layout sizes.
 - **`Ui` extension traits**: semantic helpers such as `ui.section_title(..)`,
@@ -118,6 +121,10 @@ impl eframe::App for MyApp {
 
 After that you can switch themes as usual with `ctx.set_theme(..)`.
 
+To use your own colors, call `theme::apply_with(&ctx, dark, light)` instead:
+it does the same three things with the palettes you pass in. See
+[Custom palettes](#custom-palettes).
+
 ### Palette
 
 `Palette` exposes the semantic colors of the current theme:
@@ -140,7 +147,33 @@ ui.colored_label(p.success, "Connected");
 
 You can also get a specific palette with `Palette::dark()`, `Palette::light()`
 or `Palette::for_theme(theme)`. `Palette::of` falls back to the built-in palette
-if `theme::apply` has not been called.
+if neither `theme::apply` nor `theme::apply_with` has been called.
+
+#### Custom palettes
+
+A `Palette` is a plain struct with public fields, so a custom one can start
+from a built-in palette and override only some colors:
+
+```rust
+use modern_egui::theme::{self, Palette, rgb_hex};
+
+let dark = Palette {
+    accent: rgb_hex(0x689d6a),
+    accent_hover: rgb_hex(0x8ec07c),
+    accent_active: rgb_hex(0x427b58),
+    on_accent: rgb_hex(0x282828),
+    ..Palette::dark()
+};
+
+theme::apply_with(&cc.egui_ctx, dark, Palette::light());
+```
+
+`rgb_hex` is a `const fn`, so a whole palette can also be declared as a
+`const`. When you change `accent` or `danger`, set the matching `*_hover`,
+`*_active` and `on_*` colors too: they are not derived automatically.
+
+`apply_with` can be called again later to switch palettes at runtime. It
+reinstalls the metrics as well, so any change made to them is overwritten.
 
 ### Metrics
 
@@ -440,7 +473,7 @@ A few things to keep in mind:
 
 ## Examples
 
-The repository ships with two runnable examples:
+The repository ships with three runnable examples:
 
 ```sh
 # The Quick start application shown above
@@ -449,6 +482,9 @@ cargo run --example quickstart
 # A showcase of the palette, typography, buttons, inputs, status badges,
 # surfaces and tables, in both dark and light mode
 cargo run --example palette
+
+# Two custom Gruvbox-inspired palettes installed with theme::apply_with
+cargo run --example gruvbox
 ```
 
 The `palette` example also shows icons from `egui-phosphor`, which is a

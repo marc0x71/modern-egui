@@ -10,6 +10,13 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
 
 ### Added
 
+- `theme::apply_with`, which installs the theme with custom dark and light
+  palettes instead of the built-in ones. `theme::apply` is now a shorthand
+  for it.
+- `theme::rgb_hex`, a `const fn` that builds an opaque color from a
+  `0xRRGGBB` literal, handy for defining a `Palette` as a constant.
+- `gruvbox` example: two complete custom palettes installed with
+  `theme::apply_with`.
 - `UiLayouts` trait with `center_row`, a row of widgets centered horizontally
   in the available width.
 - `InputWidth` is re-exported from the `theme` module.
