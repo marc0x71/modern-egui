@@ -15,7 +15,7 @@ use egui::{Context, Stroke, Style, Theme};
 pub use buttons::{StyledButton, Variant};
 pub use palette::Palette;
 pub use text::{StyledText, TextColor, TextSize};
-pub use ui_ext::{UiButtons, UiInputs, UiMetrics, UiPanels, UiText};
+pub use ui_ext::{InputWidth, UiButtons, UiInputs, UiLayouts, UiMetrics, UiPanels, UiText};
 
 /// Applies the modern-egui theme to an egui context.
 ///

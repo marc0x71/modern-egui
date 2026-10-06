@@ -1,5 +1,5 @@
 use eframe::egui;
-use modern_egui::theme::{self, UiButtons, UiInputs, UiMetrics, UiText};
+use modern_egui::theme::{self, InputWidth, UiButtons, UiInputs, UiLayouts, UiMetrics, UiText};
 
 fn main() -> eframe::Result {
     let options = eframe::NativeOptions {
@@ -35,10 +35,10 @@ impl eframe::App for MyApp {
             ui.muted_label("Manage your personal information.");
             ui.space_group();
 
-            ui.text_input_hint(&mut self.email, "email@example.com");
+            ui.text_input_hint_with_width(&mut self.email, "email@example.com", InputWidth::Fill);
             ui.space_inline();
 
-            ui.horizontal(|ui| {
+            ui.center_row("my_buttons", |ui| {
                 if ui.primary_button("Save").clicked() { /* ... */ }
                 if ui.ghost_button("Cancel").clicked() { /* ... */ }
                 if ui.danger_button("Delete").clicked() { /* ... */ }

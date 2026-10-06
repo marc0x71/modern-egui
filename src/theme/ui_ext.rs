@@ -488,3 +488,50 @@ impl UiPanels for Ui {
         InnerResponse::new(inner, response)
     }
 }
+
+/// Layout helpers for arranging groups of widgets on an [`egui::Ui`].
+pub trait UiLayouts {
+    /// Adds a horizontal row of widgets centered in the available width.
+    ///
+    /// `id_salt` must be unique among the centered rows of the same `Ui`.
+    fn center_row<R>(
+        &mut self,
+        id_salt: impl std::hash::Hash + std::fmt::Debug,
+        add_contents: impl FnOnce(&mut egui::Ui) -> R,
+    ) -> InnerResponse<R>;
+}
+
+impl UiLayouts for Ui {
+    fn center_row<R>(
+        &mut self,
+        id_salt: impl std::hash::Hash + std::fmt::Debug,
+        add_contents: impl FnOnce(&mut egui::Ui) -> R,
+    ) -> InnerResponse<R> {
+        let id = self.id().with(id_salt);
+        let last_width: Option<f32> = self.data(|d| d.get_temp(id));
+
+        let response = self.horizontal(|ui| {
+            let available = ui.available_width();
+
+            let margin = match last_width {
+                Some(w) if available.is_finite() => ((available - w) / 2.0).max(0.0),
+                _ => 0.0,
+            };
+            ui.add_space(margin);
+
+            let inner = ui.scope(|ui| add_contents(ui));
+
+            let width = inner.response.rect.width();
+            ui.data_mut(|d| d.insert_temp(id, width));
+
+            if last_width.is_none_or(|w| (w - width).abs() > 0.1) {
+                // the measure has changed force repaint
+                ui.ctx().request_repaint();
+            }
+
+            inner
+        });
+
+        response.inner
+    }
+}
