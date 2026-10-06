@@ -171,14 +171,30 @@ Bring the traits into scope to use the helpers on any `egui::Ui`.
 
 | Method                 | Size                    | Color    |
 |------------------------|-------------------------|----------|
+| `app_title(text)`      | `Xxl` (`FONT_2XL`)      | `Strong` |
+| `page_title(text)`     | `Xl` (`FONT_XL`)        | `Strong` |
 | `section_title(text)`  | `Lg` (`FONT_LG`)        | `Strong` |
 | `card_title(text)`     | `CardTitle` (`FONT_CT`) | `Strong` |
 | `strong_label(text)`   | `Md` (`FONT_MD`)        | `Strong` |
 | `muted_label(text)`    | `Sm` (`FONT_SM`)        | `Muted`  |
 | `metadata_label(text)` | `Xs` (`FONT_XS`)        | `Muted`  |
 
-These are presets built on top of [`StyledText`](#styled-text): use the
-widget directly when you need a different combination.
+These are presets built on top of [`StyledText`](#styled-text). For any other
+combination of size and color, two generic helpers take them as arguments:
+
+| Method                            | Size    | Color           |
+|-----------------------------------|---------|-----------------|
+| `text(text, size)`                | `size`  | `Text`          |
+| `text_colored(text, size, color)` | `size`  | `color`         |
+
+```rust
+use modern_egui::theme::{TextColor, TextSize, UiText};
+
+ui.text("Last sync: 2 minutes ago", TextSize::Sm);
+ui.text_colored("Connected", TextSize::Md, TextColor::Success);
+```
+
+Use the `StyledText` widget directly when you need more control.
 
 **`UiMetrics`** — vertical spacing
 
@@ -338,8 +354,8 @@ By default the text uses `TextSize::Md` and `TextColor::Text`.
 | `Md`        | `FONT_MD`   | Body text (default)              |
 | `CardTitle` | `FONT_CT`   | Card and panel titles            |
 | `Lg`        | `FONT_LG`   | Section titles                   |
-| `Xl`        | `FONT_XL`   | Headings                         |
-| `Xxl`       | `FONT_2XL`  | Page or application titles       |
+| `Xl`        | `FONT_XL`   | Page titles                      |
+| `Xxl`       | `FONT_2XL`  | Application titles               |
 
 `TextSize::value()` returns the size in points, if you need it elsewhere.
 
@@ -371,7 +387,7 @@ cc.egui_ctx.set_fonts(fonts);
 theme::apply(&cc.egui_ctx);
 ```
 
-Then use the icon constants wherever a text is accepted:
+Then use the icon constants in the text of buttons and labels:
 
 ```rust
 use egui_phosphor::regular as ph;
@@ -385,10 +401,16 @@ ui.secondary_button(("Next", ph::ARROW_RIGHT));
 
 // Icon only.
 ui.ghost_button(ph::X);
+
+// Labels take a single string.
+ui.muted_label(format!("{} Saved", ph::CHECK));
 ```
 
 A few things to keep in mind:
 
+- Separate atoms work with the widgets built on `egui::Button` (buttons,
+  checkboxes, radio buttons, selectable labels). Labels and the `UiText`
+  helpers take a single string, so put the icon in it with `format!`.
 - If you also install a text font, add it to the same `FontDefinitions`
   before calling `set_fonts`: a second call replaces the first one.
 - An icon has the same size as the text around it. Wrap it in a `RichText`

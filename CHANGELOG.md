@@ -14,6 +14,10 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
   themed text input.
 - `UiInputs::text_input_with_width` and `UiInputs::text_input_hint_with_width`,
   variants of the existing helpers that take an `InputWidth`.
+- `UiText::app_title` and `UiText::page_title`, title helpers for the two
+  largest text sizes.
+- `UiText::text` and `UiText::text_colored`, generic helpers for any
+  combination of `TextSize` and `TextColor`.
 
 ### Changed
 
@@ -21,6 +25,10 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
   dev-dependency only: the library itself does not depend on any icon font.
 - The README has a new "Icons" section on using icon fonts with the themed
   widgets.
+- The `palette` example uses the `UiText` helpers instead of hand-built
+  `RichText` labels.
+- The `TextSize::Xl` and `TextSize::Xxl` docs now describe them as page and
+  application title sizes, matching the new helpers.
 
 ## [0.2.1] - 2026-10-02
 
