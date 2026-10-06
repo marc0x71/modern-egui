@@ -8,6 +8,8 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-10-06
+
 ### Added
 
 - `theme::apply_with`, which installs the theme with custom dark and light
@@ -101,7 +103,9 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
   danger).
 - `quickstart` and `palette` examples.
 
-[Unreleased]: https://github.com/marc0x71/modern-egui/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/marc0x71/modern-egui/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/marc0x71/modern-egui/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/marc0x71/modern-egui/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/marc0x71/modern-egui/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/marc0x71/modern-egui/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/marc0x71/modern-egui/releases/tag/v0.1.0
