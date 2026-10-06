@@ -1,4 +1,4 @@
-//! A small modern theme and UI helper library for [egui].
+//! A modern, customizable theme and UI helper library for [egui](https://github.com/emilk/egui).
 //!
 //! `modern-egui` gives an egui application a clean, contemporary look with a
 //! single call to [`theme::apply`], and adds [`egui::Ui`] extension traits so
@@ -51,7 +51,6 @@
 //! The crate depends only on `egui`, so it works with any egui integration,
 //! not just eframe.
 //!
-//! [egui]: https://github.com/emilk/egui
 
 pub mod prelude;
 pub mod theme;

@@ -5,7 +5,7 @@
 [![CI](https://github.com/marc0x71/modern-egui/actions/workflows/ci.yml/badge.svg)](https://github.com/marc0x71/modern-egui/actions/workflows/ci.yml)
 [![License](https://img.shields.io/crates/l/modern-egui.svg)](LICENSE-MIT)
 
-A small modern theme and UI helper library for [egui](https://github.com/emilk/egui).
+A modern, customizable theme and UI helper library for [egui](https://github.com/emilk/egui).
 
 `modern-egui` gives your egui application a clean, contemporary look with a single
 function call, and adds a handful of `Ui` extension methods so that typography,
