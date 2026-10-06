@@ -8,6 +8,8 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-10-06
+
 ### Added
 
 - `InputWidth` enum (`Standard`, `Fixed`, `Fill`) to choose the width of a
