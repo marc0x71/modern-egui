@@ -504,7 +504,7 @@ pub trait UiLayouts {
 impl UiLayouts for Ui {
     fn center_row<R>(
         &mut self,
-        id_salt: impl std::hash::Hash + std::fmt::Debug,
+        id_salt: impl egui::AsIdSalt,
         add_contents: impl FnOnce(&mut egui::Ui) -> R,
     ) -> InnerResponse<R> {
         let id = self.id().with(id_salt);
@@ -525,8 +525,10 @@ impl UiLayouts for Ui {
             ui.data_mut(|d| d.insert_temp(id, width));
 
             if last_width.is_none_or(|w| (w - width).abs() > 0.1) {
-                // the measure has changed force repaint
-                ui.ctx().request_repaint();
+                // the width has changed force repaint
+                // ref: https://github.com/emilk/egui/pull/5059
+                ui.ctx()
+                    .request_discard("center_row: measured width changed")
             }
 
             inner
