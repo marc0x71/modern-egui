@@ -15,3 +15,4 @@ egui = "0.36"
 
 [dev-dependencies]
 eframe = "0.36"
+egui-phosphor = "0.14.0"

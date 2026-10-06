@@ -347,6 +347,55 @@ By default the text uses `TextSize::Md` and `TextColor::Text`.
 `Accent`, `Success`, `Warning` and `Danger`. `Custom(Color32)` uses an
 explicit color instead, which does not change with the theme.
 
+### Icons
+
+`modern-egui` does not depend on any icon font. In egui an icon is just a
+character drawn with a font that contains its glyph, so any icon font
+registered as a fallback of the `Proportional` family works with the themed
+buttons and labels.
+
+For example, with [egui-phosphor](https://crates.io/crates/egui-phosphor):
+
+```toml
+[dependencies]
+egui-phosphor = "0.14"
+```
+
+Register the font once, in your app constructor:
+
+```rust
+let mut fonts = egui::FontDefinitions::default();
+egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Regular);
+cc.egui_ctx.set_fonts(fonts);
+
+theme::apply(&cc.egui_ctx);
+```
+
+Then use the icon constants wherever a text is accepted:
+
+```rust
+use egui_phosphor::regular as ph;
+
+// Icon and text in the same string.
+ui.danger_button(format!("{} Delete", ph::TRASH));
+
+// Icon and text as separate atoms, spaced by the button gap.
+ui.primary_button((ph::FLOPPY_DISK, "Save"));
+ui.secondary_button(("Next", ph::ARROW_RIGHT));
+
+// Icon only.
+ui.ghost_button(ph::X);
+```
+
+A few things to keep in mind:
+
+- If you also install a text font, add it to the same `FontDefinitions`
+  before calling `set_fonts`: a second call replaces the first one.
+- An icon has the same size as the text around it. Wrap it in a `RichText`
+  to change it, e.g. `egui::RichText::new(ph::X).size(metrics::FONT_LG)`.
+- The fallback is registered for the `Proportional` family only, so icons do
+  not show up in monospace text.
+
 ## Examples
 
 The repository ships with two runnable examples:
@@ -359,6 +408,9 @@ cargo run --example quickstart
 # surfaces and tables, in both dark and light mode
 cargo run --example palette
 ```
+
+The `palette` example also shows icons from `egui-phosphor`, which is a
+dev-dependency only.
 
 ## Project status
 

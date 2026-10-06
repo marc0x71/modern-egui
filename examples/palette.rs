@@ -1,5 +1,6 @@
 use eframe::egui::{self, Align, Button, Color32, Layout, RichText, Stroke, ThemePreference};
 
+use egui_phosphor::regular as ph;
 use modern_egui::theme::{
     self, Palette, UiButtons, UiInputs, UiMetrics, UiPanels, UiText, metrics, ui_ext::PanelVariant,
 };
@@ -42,6 +43,11 @@ struct DemoApp {
 
 impl DemoApp {
     fn new(cc: &eframe::CreationContext<'_>) -> Self {
+        let mut fonts = egui::FontDefinitions::default();
+        egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Regular);
+
+        cc.egui_ctx.set_fonts(fonts);
+
         theme::apply(&cc.egui_ctx);
 
         cc.egui_ctx.set_theme(ThemePreference::Dark);
@@ -92,14 +98,14 @@ impl DemoApp {
                 let current_theme = ui.ctx().theme();
 
                 if ui
-                    .selectable_label(current_theme == egui::Theme::Dark, "🌙 Dark")
+                    .selectable_label(current_theme == egui::Theme::Dark, (ph::MOON, "Dark"))
                     .clicked()
                 {
                     ui.ctx().set_theme(ThemePreference::Dark);
                 }
 
                 if ui
-                    .selectable_label(current_theme == egui::Theme::Light, "☀ Light")
+                    .selectable_label(current_theme == egui::Theme::Light, (ph::SUN, "Light"))
                     .clicked()
                 {
                     ui.ctx().set_theme(ThemePreference::Light);
@@ -316,6 +322,7 @@ impl DemoApp {
             let _ = ui.secondary_button("Secondary");
             let _ = ui.ghost_button("Ghost");
             let _ = ui.danger_button("Danger");
+            let _ = ui.ghost_button(ph::X);
 
             ui.add_enabled(false, Button::new("Disabled"));
         });

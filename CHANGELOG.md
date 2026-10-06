@@ -15,6 +15,13 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
 - `UiInputs::text_input_with_width` and `UiInputs::text_input_hint_with_width`,
   variants of the existing helpers that take an `InputWidth`.
 
+### Changed
+
+- The `palette` example shows icons from `egui-phosphor`, added as a
+  dev-dependency only: the library itself does not depend on any icon font.
+- The README has a new "Icons" section on using icon fonts with the themed
+  widgets.
+
 ## [0.2.1] - 2026-10-02
 
 ### Added
