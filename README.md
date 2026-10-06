@@ -10,7 +10,10 @@ A small modern theme and UI helper library for [egui](https://github.com/emilk/e
 function call, and adds a handful of `Ui` extension methods so that typography,
 spacing, buttons, inputs and cards stay consistent across the whole interface.
 
-<img width="1900" height="1324" alt="screenshot-20261006-110441" src="https://github.com/user-attachments/assets/dd67c716-bb51-45a9-8844-29d9ec9483f8" />
+<p>
+<img width="49%" alt="modern-egui dark theme" src="https://github.com/user-attachments/assets/dd67c716-bb51-45a9-8844-29d9ec9483f8" />
+<img width="49%" alt="modern-egui light theme" src="https://github.com/user-attachments/assets/f544b3ff-8cec-41a6-b95e-ab5465d76120" />
+</p>
 
 ## Features
 
