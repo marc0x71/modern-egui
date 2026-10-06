@@ -8,6 +8,17 @@ While the crate is in the `0.x` series, breaking changes bump the minor version.
 
 ## [Unreleased]
 
+### Added
+
+- `UiLayouts` trait with `center_row`, a row of widgets centered horizontally
+  in the available width.
+- `InputWidth` is re-exported from the `theme` module.
+
+### Changed
+
+- The `quickstart` example uses a full-width email input and a centered row
+  of buttons.
+
 ## [0.2.2] - 2026-10-06
 
 ### Added

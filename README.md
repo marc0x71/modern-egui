@@ -29,6 +29,8 @@ spacing, buttons, inputs and cards stay consistent across the whole interface.
   with semantic text colors, used by the `UiText` helpers.
 - **Cards**: themed containers with the shared border, radius and padding,
   in three surface levels plus a variant that highlights itself on hover.
+- **Layout helpers**: arrangements that egui does not offer out of the box,
+  such as a row of widgets centered horizontally.
 - **Automatic theme switching**: helpers read the active palette at draw time,
   so they follow `ctx.set_theme(..)` without extra code.
 
@@ -54,7 +56,7 @@ cargo add eframe modern-egui
 
 ```rust
 use eframe::egui;
-use modern_egui::theme::{self, UiButtons, UiInputs, UiMetrics, UiText};
+use modern_egui::theme::{self, InputWidth, UiButtons, UiInputs, UiLayouts, UiMetrics, UiText};
 
 fn main() -> eframe::Result {
     let options = eframe::NativeOptions {
@@ -90,10 +92,10 @@ impl eframe::App for MyApp {
             ui.muted_label("Manage your personal information.");
             ui.space_group();
 
-            ui.text_input_hint(&mut self.email, "email@example.com");
+            ui.text_input_hint_with_width(&mut self.email, "email@example.com", InputWidth::Fill);
             ui.space_inline();
 
-            ui.horizontal(|ui| {
+            ui.center_row("my_buttons", |ui| {
                 if ui.primary_button("Save").clicked() { /* ... */ }
                 if ui.ghost_button("Cancel").clicked() { /* ... */ }
                 if ui.danger_button("Delete").clicked() { /* ... */ }
@@ -239,8 +241,7 @@ they describe *why* the space is there.
 | `Fill`       | All the width available in the current layout |
 
 ```rust
-use modern_egui::theme::UiInputs;
-use modern_egui::theme::ui_ext::InputWidth;
+use modern_egui::theme::{InputWidth, UiInputs};
 
 ui.text_input_with_width(&mut self.zip_code, InputWidth::Fixed(80.0));
 ui.text_input_hint_with_width(&mut self.search, "Search...", InputWidth::Fill);
@@ -265,8 +266,7 @@ matching border color:
 | `Elevated`   | `elevated`    | Content that must stand out               |
 
 ```rust
-use modern_egui::theme::{UiPanels, UiText};
-use modern_egui::theme::ui_ext::PanelVariant;
+use modern_egui::theme::{UiPanels, UiText, PanelVariant};
 
 ui.card(|ui| {
     ui.card_title("Profile");
@@ -295,6 +295,26 @@ if card.response.interact(egui::Sense::click()).clicked() {
     // handle the click
 }
 ```
+
+**`UiLayouts`** — arrangements of several widgets
+
+| Method                              | Description                                     |
+|-------------------------------------|-------------------------------------------------|
+| `center_row(id_salt, add_contents)` | Row of widgets centered in the available width  |
+
+```rust
+use modern_egui::theme::{UiButtons, UiLayouts};
+
+ui.center_row("dialog_actions", |ui| {
+    if ui.primary_button("Save").clicked() { /* ... */ }
+    if ui.ghost_button("Cancel").clicked() { /* ... */ }
+});
+```
+
+`center_row` returns an `egui::InnerResponse`: the value produced by the
+closure plus the `Response` of the row content. `id_salt` must be unique among
+the centered rows of the same `Ui`. If the content is wider than the available
+width, the row starts at the left edge.
 
 ### Styled buttons
 
