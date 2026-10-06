@@ -1,5 +1,7 @@
 use eframe::egui;
-use modern_egui::theme::{self, InputWidth, UiButtons, UiInputs, UiLayouts, UiMetrics, UiText};
+
+use modern_egui::prelude::*;
+use modern_egui::theme;
 
 fn main() -> eframe::Result {
     let options = eframe::NativeOptions {

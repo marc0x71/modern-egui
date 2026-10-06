@@ -53,4 +53,5 @@
 //!
 //! [egui]: https://github.com/emilk/egui
 
+pub mod prelude;
 pub mod theme;

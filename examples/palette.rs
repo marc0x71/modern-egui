@@ -1,10 +1,9 @@
 use eframe::egui::{self, Align, Button, Color32, Layout, RichText, Stroke, ThemePreference};
 
 use egui_phosphor::regular as ph;
-use modern_egui::theme::{
-    self, Palette, TextColor, TextSize, UiButtons, UiInputs, UiMetrics, UiPanels, UiText, metrics,
-    ui_ext::PanelVariant,
-};
+
+use modern_egui::prelude::*;
+use modern_egui::theme::{self, Palette, metrics};
 
 fn main() -> eframe::Result {
     let title = "Modern egui — Theme Demo";
@@ -192,12 +191,7 @@ impl DemoApp {
                     ui.space2();
 
                     ui.vertical(|ui| {
-                        ui.label(
-                            RichText::new(name)
-                                .size(metrics::FONT_SM)
-                                .strong()
-                                .color(p.text_strong),
-                        );
+                        ui.text_colored(name, TextSize::Sm, TextColor::Strong);
 
                         ui.label(
                             RichText::new(format!(
@@ -563,14 +557,10 @@ impl eframe::App for DemoApp {
             .show(ui, |ui| {
                 ui.metadata_label("THEME");
                 ui.space_inline();
-                ui.label(
-                    RichText::new(match ui.ctx().theme() {
-                        egui::Theme::Dark => "Dark mode",
-                        egui::Theme::Light => "Light mode",
-                    })
-                    .size(metrics::FONT_MD)
-                    .color(p.text_strong),
-                );
+                ui.strong_label(match ui.ctx().theme() {
+                    egui::Theme::Dark => "Dark mode",
+                    egui::Theme::Light => "Light mode",
+                });
                 ui.space_group();
                 ui.separator();
 
@@ -696,25 +686,12 @@ fn demo_card(ui: &mut egui::Ui, add_contents: impl FnOnce(&mut egui::Ui)) {
 }
 
 fn surface_card(ui: &mut egui::Ui, title: &str, description: &str, variant: PanelVariant) {
-    let p = Palette::of(ui.ctx());
-
     ui.card_with_variant(variant, |ui: &mut egui::Ui| {
         ui.set_min_width(ui.available_width());
 
-        ui.label(
-            RichText::new(title)
-                .size(metrics::FONT_CT)
-                .strong()
-                .color(p.text_strong),
-        );
-
+        ui.card_title(title);
         ui.space_inline();
-
-        ui.label(
-            RichText::new(description)
-                .size(metrics::FONT_SM)
-                .color(p.text_muted),
-        );
+        ui.muted_label(description);
     });
 }
 
