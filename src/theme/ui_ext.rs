@@ -83,9 +83,16 @@ impl UiMetrics for Ui {
 /// Typography helpers for applying common semantic text roles to [`egui::Ui`].
 ///
 /// These methods are semantic presets built on top of [`StyledText`].
-/// Use `StyledText` directly when more control over size, color, or emphasis
-/// is required.
+/// Use [`text`](Self::text) or [`text_colored`](Self::text_colored) for a
+/// different combination of size and color, and `StyledText` directly when
+/// more control is required.
 pub trait UiText {
+    /// Adds the application title using the largest text size.
+    fn app_title(&mut self, text: impl Into<String>) -> egui::Response;
+
+    /// Adds a page title using the theme's heading typography.
+    fn page_title(&mut self, text: impl Into<String>) -> egui::Response;
+
     /// Adds a prominent section title using the theme's section typography.
     fn section_title(&mut self, text: impl Into<String>) -> egui::Response;
 
@@ -100,9 +107,36 @@ pub trait UiText {
 
     /// Adds emphasized body text using the theme's strong text color.
     fn strong_label(&mut self, text: impl Into<String>) -> egui::Response;
+
+    /// Adds text with the given size and the default body text color.
+    fn text(&mut self, text: impl Into<String>, size: TextSize) -> Response;
+
+    /// Adds text with the given size and semantic color.
+    fn text_colored(
+        &mut self,
+        text: impl Into<String>,
+        size: TextSize,
+        color: TextColor,
+    ) -> Response;
 }
 
 impl UiText for egui::Ui {
+    fn app_title(&mut self, text: impl Into<String>) -> egui::Response {
+        self.add(
+            StyledText::new(text)
+                .size(TextSize::Xxl)
+                .color(TextColor::Strong),
+        )
+    }
+
+    fn page_title(&mut self, text: impl Into<String>) -> egui::Response {
+        self.add(
+            StyledText::new(text)
+                .size(TextSize::Xl)
+                .color(TextColor::Strong),
+        )
+    }
+
     fn section_title(&mut self, text: impl Into<String>) -> egui::Response {
         self.add(
             StyledText::new(text)
@@ -141,6 +175,19 @@ impl UiText for egui::Ui {
                 .size(TextSize::Md)
                 .color(TextColor::Strong),
         )
+    }
+
+    fn text(&mut self, text: impl Into<String>, size: TextSize) -> Response {
+        self.add(StyledText::new(text).size(size))
+    }
+
+    fn text_colored(
+        &mut self,
+        text: impl Into<String>,
+        size: TextSize,
+        color: TextColor,
+    ) -> Response {
+        self.add(StyledText::new(text).size(size).color(color))
     }
 }
 

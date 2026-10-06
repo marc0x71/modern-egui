@@ -21,9 +21,9 @@ pub enum TextSize {
     CardTitle,
     /// Large text, intended for section titles.
     Lg,
-    /// Extra-large text, intended for headings.
+    /// Extra-large text, intended for page titles.
     Xl,
-    /// Largest text size, intended for page or application titles.
+    /// Largest text size, intended for application titles.
     Xxl,
 }
 

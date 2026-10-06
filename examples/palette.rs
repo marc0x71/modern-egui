@@ -2,7 +2,8 @@ use eframe::egui::{self, Align, Button, Color32, Layout, RichText, Stroke, Theme
 
 use egui_phosphor::regular as ph;
 use modern_egui::theme::{
-    self, Palette, UiButtons, UiInputs, UiMetrics, UiPanels, UiText, metrics, ui_ext::PanelVariant,
+    self, Palette, TextColor, TextSize, UiButtons, UiInputs, UiMetrics, UiPanels, UiText, metrics,
+    ui_ext::PanelVariant,
 };
 
 fn main() -> eframe::Result {
@@ -76,22 +77,10 @@ impl DemoApp {
     // -------------------------------------------------------------------------
 
     fn header(&mut self, ui: &mut egui::Ui) {
-        let p = Palette::of(ui.ctx());
-
         ui.horizontal(|ui| {
             ui.vertical(|ui| {
-                ui.label(
-                    RichText::new("Modern egui")
-                        .color(p.text_strong)
-                        .size(metrics::FONT_2XL)
-                        .strong(),
-                );
-
-                ui.label(
-                    RichText::new("Theme & component showcase")
-                        .size(metrics::FONT_SM)
-                        .color(p.text_muted),
-                );
+                ui.app_title("Modern egui");
+                ui.muted_label("Theme & component showcase");
             });
 
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
@@ -113,11 +102,7 @@ impl DemoApp {
 
                 ui.separator();
 
-                ui.label(
-                    RichText::new("Theme")
-                        .size(metrics::FONT_XS)
-                        .color(p.text_muted),
-                );
+                ui.metadata_label("Theme");
             });
         });
     }
@@ -129,15 +114,12 @@ impl DemoApp {
     fn palette_section(&mut self, ui: &mut egui::Ui) {
         let p = Palette::of(ui.ctx());
 
-        section_title(ui, "Color palette");
+        ui.section_title("Color palette");
+        ui.space_inline();
 
-        ui.label(
-            RichText::new(
-                "I colori vengono letti direttamente da Palette::of(ctx) \
-                 e cambiano insieme al tema.",
-            )
-            .size(metrics::FONT_SM)
-            .color(p.text_muted),
+        ui.muted_label(
+            "Colors are read directly from Palette::of(ctx) \
+     and change together with the theme.",
         );
 
         ui.space_group();
@@ -250,61 +232,27 @@ impl DemoApp {
     // -------------------------------------------------------------------------
 
     fn typography_section(&mut self, ui: &mut egui::Ui) {
-        let p = Palette::of(ui.ctx());
+        ui.section_title("Typography");
+        ui.space_inline();
 
-        section_title(ui, "Typography");
-
-        typography_sample(
-            ui,
-            "2XL — Application title",
-            metrics::FONT_2XL,
-            p.text_strong,
-        );
-
-        typography_sample(ui, "XL — Heading", metrics::FONT_XL, p.text_strong);
-
-        typography_sample(ui, "LG — Section title", metrics::FONT_LG, p.text_strong);
-
-        typography_sample(ui, "CT — Card title", metrics::FONT_CT, p.text_strong);
-
-        typography_sample(ui, "MD — Body text", metrics::FONT_MD, p.text);
-
-        typography_sample(ui, "SM — Secondary text", metrics::FONT_SM, p.text_muted);
-
-        typography_sample(ui, "XS — Metadata", metrics::FONT_XS, p.text_muted);
+        ui.app_title("2XL — Application title");
+        ui.page_title("XL — Page title");
+        ui.section_title("LG — Section title");
+        ui.card_title("CT — Card title");
+        ui.text("MD — Body text", TextSize::Md);
+        ui.muted_label("SM — Secondary text");
+        ui.metadata_label("XS — Metadata");
 
         ui.space_group();
 
         ui.horizontal_wrapped(|ui| {
-            ui.label(
-                RichText::new("Accent")
-                    .size(metrics::FONT_MD)
-                    .color(p.accent),
-            );
-
+            ui.text_colored("Accent", TextSize::Md, TextColor::Accent);
             ui.separator();
-
-            ui.label(
-                RichText::new("Success")
-                    .size(metrics::FONT_MD)
-                    .color(p.success),
-            );
-
+            ui.text_colored("Success", TextSize::Md, TextColor::Success);
             ui.separator();
-
-            ui.label(
-                RichText::new("Warning")
-                    .size(metrics::FONT_MD)
-                    .color(p.warning),
-            );
-
+            ui.text_colored("Warning", TextSize::Md, TextColor::Warning);
             ui.separator();
-
-            ui.label(
-                RichText::new("Danger")
-                    .size(metrics::FONT_MD)
-                    .color(p.danger),
-            );
+            ui.text_colored("Danger", TextSize::Md, TextColor::Danger);
         });
     }
 
@@ -313,9 +261,8 @@ impl DemoApp {
     // -------------------------------------------------------------------------
 
     fn buttons_section(&mut self, ui: &mut egui::Ui) {
-        let p = Palette::of(ui.ctx());
-
-        section_title(ui, "Buttons");
+        ui.section_title("Buttons");
+        ui.space_inline();
 
         ui.horizontal_wrapped(|ui| {
             let _ = ui.primary_button("Primary");
@@ -334,12 +281,7 @@ impl DemoApp {
                 self.counter -= 1;
             }
 
-            ui.label(
-                RichText::new(self.counter.to_string())
-                    .strong()
-                    .size(metrics::FONT_MD)
-                    .color(p.text_strong),
-            );
+            ui.strong_label(self.counter.to_string());
 
             if ui.button("+").clicked() {
                 self.counter += 1;
@@ -352,9 +294,8 @@ impl DemoApp {
     // -------------------------------------------------------------------------
 
     fn inputs_section(&mut self, ui: &mut egui::Ui) {
-        let p = Palette::of(ui.ctx());
-
-        section_title(ui, "Inputs");
+        ui.section_title("Inputs");
+        ui.space_inline();
 
         egui::Grid::new("input_grid")
             .num_columns(2)
@@ -389,13 +330,9 @@ impl DemoApp {
 
         ui.space_inline();
 
-        ui.label(
-            RichText::new(
-                "Prova focus, hover e click sugli input \
-                 per controllare border e accent.",
-            )
-            .size(metrics::FONT_SM)
-            .color(p.text_muted),
+        ui.muted_label(
+            "Try focus, hover and click on the inputs \
+     to check the border and accent colors.",
         );
     }
 
@@ -404,9 +341,8 @@ impl DemoApp {
     // -------------------------------------------------------------------------
 
     fn selection_section(&mut self, ui: &mut egui::Ui) {
-        let p = Palette::of(ui.ctx());
-
-        section_title(ui, "Selection & navigation");
+        ui.section_title("Selection & navigation");
+        ui.space_inline();
 
         ui.horizontal_wrapped(|ui| {
             for (index, label) in ["Overview", "Activity", "Settings"].iter().enumerate() {
@@ -421,14 +357,10 @@ impl DemoApp {
 
         ui.space_group();
 
-        ui.label(
-            RichText::new(format!(
-                "Selected tab: {}",
-                ["Overview", "Activity", "Settings",][self.selected_tab],
-            ))
-            .size(metrics::FONT_SM)
-            .color(p.text_muted),
-        );
+        ui.muted_label(format!(
+            "Selected tab: {}",
+            ["Overview", "Activity", "Settings",][self.selected_tab],
+        ));
 
         ui.space_group();
 
@@ -440,9 +372,7 @@ impl DemoApp {
             })
             .show_ui(ui, |ui| {
                 ui.selectable_value(&mut self.selected_plan, 0, "Free");
-
                 ui.selectable_value(&mut self.selected_plan, 1, "Pro");
-
                 ui.selectable_value(&mut self.selected_plan, 2, "Enterprise");
             });
     }
@@ -454,7 +384,8 @@ impl DemoApp {
     fn status_section(&mut self, ui: &mut egui::Ui) {
         let p = Palette::of(ui.ctx());
 
-        section_title(ui, "Progress & semantic colors");
+        ui.section_title("Progress & semantic colors");
+        ui.space_inline();
 
         ui.add(
             egui::ProgressBar::new(self.progress)
@@ -484,12 +415,7 @@ impl DemoApp {
                 metrics::SPACE_1 as i8,
             ))
             .show(ui, |ui| {
-                ui.label(
-                    RichText::new(text)
-                        .size(metrics::FONT_SM)
-                        .color(color)
-                        .strong(),
-                );
+                ui.text_colored(text, TextSize::Sm, TextColor::Custom(color));
             });
     }
 
@@ -498,16 +424,12 @@ impl DemoApp {
     // -------------------------------------------------------------------------
 
     fn surfaces_section(&mut self, ui: &mut egui::Ui) {
-        let p = Palette::of(ui.ctx());
+        ui.section_title("Surface hierarchy");
+        ui.space_inline();
 
-        section_title(ui, "Surface hierarchy");
-        ui.label(
-            RichText::new(
-                "Confronto fra bg, surface, \
-                 surface_alt ed elevated.",
-            )
-            .size(metrics::FONT_SM)
-            .color(p.text_muted),
+        ui.muted_label(
+            "Comparison between bg, surface, \
+     surface_alt and elevated.",
         );
 
         ui.space_group();
@@ -517,24 +439,21 @@ impl DemoApp {
                 surface_card(
                     &mut columns[0],
                     "Surface",
-                    "Card principale sopra \
-                     al background.",
+                    "Main card above the background.",
                     PanelVariant::Surface,
                 );
 
                 surface_card(
                     &mut columns[1],
                     "Surface alt",
-                    "Controlli, hover e \
-                     superfici secondarie.",
+                    "Controls, hover states and secondary surfaces.",
                     PanelVariant::SurfaceAlt,
                 );
 
                 surface_card(
                     &mut columns[2],
                     "Elevated",
-                    "Finestre, popup e \
-                     contenuti sopraelevati.",
+                    "Windows, popups and raised content.",
                     PanelVariant::Elevated,
                 );
             });
@@ -542,8 +461,7 @@ impl DemoApp {
             surface_card(
                 ui,
                 "Surface",
-                "Card principale sopra \
-                 al background.",
+                "Main card above the background.",
                 PanelVariant::Surface,
             );
             ui.space_group();
@@ -551,8 +469,7 @@ impl DemoApp {
             surface_card(
                 ui,
                 "Surface alt",
-                "Controlli, hover e \
-                 superfici secondarie.",
+                "Controls, hover states and secondary surfaces.",
                 PanelVariant::SurfaceAlt,
             );
             ui.space_group();
@@ -560,8 +477,7 @@ impl DemoApp {
             surface_card(
                 ui,
                 "Elevated",
-                "Finestre, popup e \
-                 contenuti sopraelevati.",
+                "Windows, popups and raised content.",
                 PanelVariant::Elevated,
             );
         }
@@ -572,9 +488,8 @@ impl DemoApp {
     // -------------------------------------------------------------------------
 
     fn table_section(&mut self, ui: &mut egui::Ui) {
-        let p = Palette::of(ui.ctx());
-
-        section_title(ui, "Table / striped rows");
+        ui.section_title("Table / striped rows");
+        ui.space_inline();
 
         egui::Grid::new("demo_table")
             .striped(true)
@@ -587,22 +502,22 @@ impl DemoApp {
                 ui.end_row();
 
                 ui.label("Modern egui");
-                ui.label(RichText::new("Active").color(p.success));
+                ui.text_colored("Active", TextSize::Md, TextColor::Success);
                 ui.label("68%");
                 ui.end_row();
 
                 ui.label("Dashboard");
-                ui.label(RichText::new("Review").color(p.warning));
+                ui.text_colored("Review", TextSize::Md, TextColor::Warning);
                 ui.label("42%");
                 ui.end_row();
 
                 ui.label("Old UI");
-                ui.label(RichText::new("Deprecated").color(p.danger));
+                ui.text_colored("Deprecated", TextSize::Md, TextColor::Danger);
                 ui.label("100%");
                 ui.end_row();
 
                 ui.label("Documentation");
-                ui.label(RichText::new("Draft").color(p.accent));
+                ui.text_colored("Draft", TextSize::Md, TextColor::Accent);
                 ui.label("31%");
                 ui.end_row();
             });
@@ -646,7 +561,7 @@ impl eframe::App for DemoApp {
                     .inner_margin(metrics::PANEL_PADDING),
             )
             .show(ui, |ui| {
-                sidebar_label(ui, "THEME");
+                ui.metadata_label("THEME");
                 ui.space_inline();
                 ui.label(
                     RichText::new(match ui.ctx().theme() {
@@ -660,7 +575,7 @@ impl eframe::App for DemoApp {
                 ui.separator();
 
                 ui.space_group();
-                sidebar_label(ui, "QUICK COLORS");
+                ui.metadata_label("QUICK COLORS");
                 ui.space_inline();
                 mini_color(ui, "Accent", p.accent);
                 mini_color(ui, "Success", p.success);
@@ -670,7 +585,7 @@ impl eframe::App for DemoApp {
                 ui.separator();
 
                 ui.space_group();
-                sidebar_label(ui, "BACKGROUND");
+                ui.metadata_label("BACKGROUND");
                 ui.space_inline();
                 ui.label(
                     RichText::new(format!("#{:02X}{:02X}{:02X}", p.bg.r(), p.bg.g(), p.bg.b(),))
@@ -772,34 +687,6 @@ impl eframe::App for DemoApp {
 // Helpers
 // -----------------------------------------------------------------------------
 
-fn section_title(ui: &mut egui::Ui, title: &str) {
-    let p = Palette::of(ui.ctx());
-
-    ui.label(
-        RichText::new(title)
-            .size(metrics::FONT_LG)
-            .strong()
-            .color(p.text_strong),
-    );
-
-    ui.space_inline();
-}
-
-fn sidebar_label(ui: &mut egui::Ui, text: &str) {
-    let p = Palette::of(ui.ctx());
-
-    ui.label(
-        RichText::new(text)
-            .size(metrics::FONT_XS)
-            .strong()
-            .color(p.text_muted),
-    );
-}
-
-fn typography_sample(ui: &mut egui::Ui, text: &str, size: f32, color: Color32) {
-    ui.label(RichText::new(text).size(size).color(color));
-}
-
 fn demo_card(ui: &mut egui::Ui, add_contents: impl FnOnce(&mut egui::Ui)) {
     ui.card(|ui| {
         ui.set_min_width(ui.available_width());
@@ -832,12 +719,10 @@ fn surface_card(ui: &mut egui::Ui, title: &str, description: &str, variant: Pane
 }
 
 fn mini_color(ui: &mut egui::Ui, name: &str, color: Color32) {
-    let p = Palette::of(ui.ctx());
-
     ui.horizontal(|ui| {
         let side = metrics::EM;
         let (rect, _) = ui.allocate_exact_size(egui::vec2(side, side), egui::Sense::hover());
         ui.painter().rect_filled(rect, metrics::RADIUS_SM, color);
-        ui.label(RichText::new(name).size(metrics::FONT_SM).color(p.text));
+        ui.text(name, TextSize::Sm);
     });
 }
